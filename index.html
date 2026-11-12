@@ -65,7 +65,6 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
-    /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -116,7 +115,6 @@
   <!-- ==================== 1. HALAMAN LOGIN & SETUP ==================== -->
   <div id="auth-screen" class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-emerald-50 via-slate-50 to-teal-50">
     <div class="w-full max-w-md glass-card rounded-2xl border border-slate-200/80 shadow-xl overflow-hidden">
-      <!-- Top Eco Accent Bar -->
       <div class="h-2 bg-gradient-to-r from-emerald-600 via-green-500 to-amber-400"></div>
 
       <div class="p-6 sm:p-8">
@@ -203,7 +201,6 @@
 
     <!-- DESKTOP LEFT SIDEBAR (>= 1024px) -->
     <aside class="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-slate-200 z-30">
-      <!-- Brand Header -->
       <div class="p-5 border-b border-slate-100 flex items-center gap-3">
         <div id="sidebar-logo-render" class="w-12 h-12 rounded-xl bg-emerald-50/60 border border-slate-100 flex items-center justify-center p-1 shrink-0 overflow-hidden">
           <img src="./logo.jpg" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" class="w-full h-full object-contain rounded-lg" />
@@ -345,9 +342,8 @@
             </div>
           </div>
 
-          <!-- 4 Kartu Kategori Sampah (Semantik Warna Baku) -->
+          <!-- 4 Kartu Kategori Sampah -->
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- 1. Kertas (Biru) -->
             <div class="bg-white rounded-xl border border-slate-200 border-t-4 border-t-blue-600 p-4 sm:p-5 shadow-xs">
               <div class="flex items-center justify-between mb-3">
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">1. Kertas</span>
@@ -357,7 +353,6 @@
               <p id="kpi-kertas-gram" class="text-xs text-slate-500 tabular-nums mt-1">0 gram</p>
             </div>
 
-            <!-- 2. Plastik (Kuning/Amber) -->
             <div class="bg-white rounded-xl border border-slate-200 border-t-4 border-t-amber-500 p-4 sm:p-5 shadow-xs">
               <div class="flex items-center justify-between mb-3">
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">2. Plastik</span>
@@ -367,7 +362,6 @@
               <p id="kpi-plastik-gram" class="text-xs text-slate-500 tabular-nums mt-1">0 gram</p>
             </div>
 
-            <!-- 3. Organik (Hijau) -->
             <div class="bg-white rounded-xl border border-slate-200 border-t-4 border-t-green-600 p-4 sm:p-5 shadow-xs">
               <div class="flex items-center justify-between mb-3">
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200">3. Organik</span>
@@ -377,7 +371,6 @@
               <p id="kpi-organik-gram" class="text-xs text-slate-500 tabular-nums mt-1">0 gram</p>
             </div>
 
-            <!-- 4. B3 (Merah) -->
             <div class="bg-white rounded-xl border border-slate-200 border-t-4 border-t-red-600 p-4 sm:p-5 shadow-xs">
               <div class="flex items-center justify-between mb-3">
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200">4. B3</span>
@@ -397,12 +390,10 @@
               </div>
             </div>
 
-            <!-- Stacked Bar -->
             <div class="w-full h-5 bg-slate-100 rounded-full overflow-hidden flex mb-5" id="composition-stacked-bar">
               <div class="h-full bg-slate-200 w-full"></div>
             </div>
 
-            <!-- Bar Detail Per Kategori -->
             <div id="composition-bars-list" class="space-y-3"></div>
           </div>
 
@@ -432,7 +423,7 @@
           </div>
         </section>
 
-        <!-- ==================== VIEW B: FORM TRANSAKSI BARU (TELLER & ADMIN) ==================== -->
+        <!-- ==================== VIEW B: FORM TRANSAKSI BARU ==================== -->
         <section id="view-transaksi-baru" class="hidden max-w-3xl mx-auto space-y-5">
           <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
             <div class="p-5 sm:p-6 border-b border-slate-100 bg-emerald-50/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -446,7 +437,6 @@
             </div>
 
             <form id="form-transaksi" class="p-5 sm:p-6 space-y-5">
-              <!-- Identitas Nasabah & Waktu -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Pilih Kelas (Nasabah) *</label>
@@ -463,7 +453,6 @@
                 </div>
               </div>
 
-              <!-- Info Wali Kelas Otomatis -->
               <div id="trx-guru-info" class="hidden p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80 flex items-center gap-3">
                 <div class="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
                   <i data-lucide="user-check" class="w-4 h-4"></i>
@@ -474,7 +463,6 @@
                 </div>
               </div>
 
-              <!-- Daftar Item Sampah Dinamis -->
               <div class="space-y-3">
                 <div class="flex items-center justify-between">
                   <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Rincian Sampah Disetorkan *</label>
@@ -490,7 +478,6 @@
                 </button>
               </div>
 
-              <!-- Ringkasan Kalkulasi Real-Time -->
               <div class="p-4 rounded-xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <p class="text-xs text-slate-400 uppercase font-semibold">Total Berat Keseluruhan Nota</p>
@@ -513,7 +500,6 @@
 
         <!-- ==================== VIEW C: RIWAYAT TRANSAKSI ==================== -->
         <section id="view-riwayat" class="hidden space-y-5">
-          <!-- Filter Bar Riwayat -->
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div>
               <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Cari No. Nota / Kelas</label>
@@ -553,7 +539,6 @@
             </div>
           </div>
 
-          <!-- Tabel Riwayat -->
           <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse">
@@ -617,7 +602,7 @@
           </div>
         </section>
 
-        <!-- ==================== VIEW E: DATA NASABAH / GURU KELAS (ADMIN) ==================== -->
+        <!-- ==================== VIEW E: DATA NASABAH / GURU KELAS ==================== -->
         <section id="view-nasabah" class="hidden space-y-5">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
@@ -679,21 +664,21 @@
           </div>
         </section>
 
-        <!-- ==================== VIEW F: DATA SEKOLAH & KOP LAPORAN (ADMIN) ==================== -->
-        <section id="view-sekolah" class="hidden max-w-3xl mx-auto space-y-5">
+        <!-- ==================== VIEW F: DATA SEKOLAH & 3 PEJABAT PENANDATANGAN ==================== -->
+        <section id="view-sekolah" class="hidden max-w-4xl mx-auto space-y-5">
           <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
             <div class="p-5 sm:p-6 border-b border-slate-100 bg-emerald-50/40 flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
                 <i data-lucide="school" class="w-5 h-5"></i>
               </div>
               <div>
-                <h2 class="font-display text-lg font-bold text-slate-900">Identitas Sekolah & Penandatangan Laporan</h2>
+                <h2 class="font-display text-lg font-bold text-slate-900">Identitas Sekolah & Pejabat Penandatangan Laporan</h2>
                 <p class="text-xs text-slate-500">Data yang diisi di sini otomatis tampil pada Kop Laporan Resmi, Struk Penyetoran, dan tersinkron di semua HP pengurus.</p>
               </div>
             </div>
 
             <form id="form-data-sekolah" class="p-5 sm:p-6 space-y-5">
-              <!-- Identitas Instansi Sekolah -->
+              <!-- 1. Identitas Instansi Sekolah -->
               <div class="space-y-4">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 border-b border-slate-100 pb-1.5">1. Identitas Satuan Pendidikan</h3>
                 <div>
@@ -708,12 +693,13 @@
                 </div>
               </div>
 
-              <!-- Pejabat Penandatangan Laporan -->
+              <!-- 2. Tiga Pejabat Penandatangan Laporan -->
               <div class="space-y-4 pt-2">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 border-b border-slate-100 pb-1.5">2. Pejabat Penandatangan Laporan Resmi</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 border-b border-slate-100 pb-1.5">2. Pejabat Penandatangan Laporan Resmi (3 Penandatangan)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <!-- Kolom 1: Pembina / Kepala Sekolah -->
                   <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
-                    <p class="text-xs font-bold text-slate-800">Pembina Kreasi 85 / Kepala Sekolah</p>
+                    <p class="text-xs font-bold text-slate-800">1. Pembina / Kepala Sekolah</p>
                     <div>
                       <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Kepala Sekolah & Gelar</label>
                       <input type="text" id="sek-nama-kepsek" placeholder="Nama Kepala Sekolah..."
@@ -726,16 +712,32 @@
                     </div>
                   </div>
 
+                  <!-- Kolom 2: Kepala Kreasi 85 -->
                   <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
-                    <p class="text-xs font-bold text-slate-800">Kepala / Ketua Kreasi 85</p>
+                    <p class="text-xs font-bold text-slate-800">2. Kepala Kreasi 85</p>
                     <div>
                       <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Kepala Kreasi 85 & Gelar</label>
-                      <input type="text" id="sek-nama-ketua" placeholder="Nama Ketua Bank Sampah..."
+                      <input type="text" id="sek-nama-ketua" placeholder="Nama Kepala Kreasi 85..."
                         class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
                     </div>
                     <div>
                       <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP Kepala Kreasi 85</label>
                       <input type="text" id="sek-nip-ketua" placeholder="NIP (Opsional)..."
+                        class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <!-- Kolom 3: Teller Kreasi 85 -->
+                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
+                    <p class="text-xs font-bold text-slate-800">3. Teller Kreasi 85</p>
+                    <div>
+                      <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Teller Kreasi 85 & Gelar</label>
+                      <input type="text" id="sek-nama-teller" placeholder="Nama Teller Kreasi 85..."
+                        class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
+                    <div>
+                      <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP Teller Kreasi 85</label>
+                      <input type="text" id="sek-nip-teller" placeholder="NIP (Opsional)..."
                         class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
                     </div>
                   </div>
@@ -875,7 +877,7 @@
             class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">NIP / NUPTK (Untuk Tanda Tangan Laporan)</label>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">NIP / NUPTK (Opsional)</label>
           <input type="text" id="pengurus-nip" placeholder="Opsional"
             class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
         </div>
@@ -1187,7 +1189,7 @@ CREATE TABLE IF NOT EXISTS transaksi_detail (
   keterangan TEXT
 );
 
--- 5. Tabel Pengaturan Identitas Sekolah & Penandatangan
+-- 5. Tabel Pengaturan Identitas Sekolah & 3 Penandatangan
 CREATE TABLE IF NOT EXISTS pengaturan_sekolah (
   id INTEGER PRIMARY KEY DEFAULT 1,
   nama_sekolah TEXT DEFAULT '',
@@ -1196,6 +1198,8 @@ CREATE TABLE IF NOT EXISTS pengaturan_sekolah (
   nip_kepsek TEXT DEFAULT '',
   nama_ketua TEXT DEFAULT '',
   nip_ketua TEXT DEFAULT '',
+  nama_teller TEXT DEFAULT '',
+  nip_teller TEXT DEFAULT '',
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -1291,7 +1295,9 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
         nama_kepsek: '',
         nip_kepsek: '',
         nama_ketua: '',
-        nip_ketua: ''
+        nip_ketua: '',
+        nama_teller: '',
+        nip_teller: ''
       },
       selectedStrukNota: null,
       importBuffer: []
@@ -1421,7 +1427,6 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
       showToast('Skrip SQL Supabase berhasil disalin ke clipboard!', 'success');
     };
 
-    // Simpan Pengaturan Supabase
     document.getElementById('form-supabase-config').addEventListener('submit', (e) => {
       e.preventDefault();
       const url = document.getElementById('cfg-supabase-url').value.trim();
@@ -1503,7 +1508,6 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
       btn.disabled = true;
 
       try {
-        // 1. Cek ke tabel pengurus
         const { data: pengurusData, error: errP } = await supabase
           .from('pengurus')
           .select('*')
@@ -1528,7 +1532,6 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
           return;
         }
 
-        // 2. Cek ke tabel nasabah_kelas
         const { data: nasabahData, error: errN } = await supabase
           .from('nasabah_kelas')
           .select('*')
@@ -1685,7 +1688,9 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
             nama_kepsek: data.nama_kepsek || '',
             nip_kepsek: data.nip_kepsek || '',
             nama_ketua: data.nama_ketua || '',
-            nip_ketua: data.nip_ketua || ''
+            nip_ketua: data.nip_ketua || '',
+            nama_teller: data.nama_teller || '',
+            nip_teller: data.nip_teller || ''
           };
           updateSchoolBrandingUI();
         }
@@ -1778,7 +1783,7 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
     }
 
     // =========================================================================
-    // 8B. FORM DATA SEKOLAH & PENANDATANGAN LAPORAN
+    // 8B. FORM DATA SEKOLAH & 3 PEJABAT PENANDATANGAN LAPORAN
     // =========================================================================
     function populateSekolahForm() {
       const s = state.sekolahInfo || {};
@@ -1790,6 +1795,8 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
       document.getElementById('sek-nip-kepsek').value = s.nip_kepsek || '';
       document.getElementById('sek-nama-ketua').value = s.nama_ketua || '';
       document.getElementById('sek-nip-ketua').value = s.nip_ketua || '';
+      document.getElementById('sek-nama-teller').value = s.nama_teller || '';
+      document.getElementById('sek-nip-teller').value = s.nip_teller || '';
     }
 
     document.getElementById('form-data-sekolah').addEventListener('submit', async (e) => {
@@ -1807,6 +1814,8 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
         nip_kepsek: document.getElementById('sek-nip-kepsek').value.trim(),
         nama_ketua: document.getElementById('sek-nama-ketua').value.trim(),
         nip_ketua: document.getElementById('sek-nip-ketua').value.trim(),
+        nama_teller: document.getElementById('sek-nama-teller').value.trim(),
+        nip_teller: document.getElementById('sek-nip-teller').value.trim(),
         updated_at: new Date().toISOString()
       };
 
@@ -1819,9 +1828,9 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
 
         state.sekolahInfo = payload;
         updateSchoolBrandingUI();
-        showToast('Identitas sekolah & penandatangan laporan berhasil disimpan!', 'success');
+        showToast('Identitas sekolah & 3 penandatangan laporan berhasil disimpan!', 'success');
       } catch (err) {
-        showToast('Gagal menyimpan data sekolah (pastikan SQL tabel pengaturan_sekolah sudah dijalankan): ' + err.message, 'error');
+        showToast('Gagal menyimpan data sekolah (pastikan kolom nama_teller & nip_teller sudah ditambahkan di SQL): ' + err.message, 'error');
       } finally {
         btn.disabled = false;
       }
@@ -2088,7 +2097,6 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
         document.getElementById(`kpi-${key}-gram`).textContent = formatGram(g);
       });
 
-      // Update Visualisasi Grafik Komposisi
       const stackedBar = document.getElementById('composition-stacked-bar');
       const barsList = document.getElementById('composition-bars-list');
 
@@ -2120,7 +2128,6 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
         }).join('');
       }
 
-      // Render Rekap Per Kelas
       const rekapCard = document.getElementById('dash-rekap-kelas-card');
       const rekapTbody = document.getElementById('dash-rekap-kelas-tbody');
       if (rekapCard && rekapTbody) {
@@ -2244,7 +2251,6 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
       lucide.createIcons({ nodes: [tbody] });
     };
 
-    // Edit Transaksi
     window.openEditTransaksiModal = function(notaId) {
       const nota = state.transaksiList.find(n => n.id === notaId);
       if (!nota) return;
@@ -2404,7 +2410,7 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
     };
 
     // =========================================================================
-    // 12. STRUK NOTA & CETAK LAPORAN RESMI (TERINTEGRASI DATA SEKOLAH)
+    // 12. STRUK NOTA & CETAK LAPORAN RESMI (3 PEJABAT PENANDATANGAN)
     // =========================================================================
     window.openStrukModal = function(notaId) {
       const nota = state.transaksiList.find(n => n.id === notaId);
@@ -2497,15 +2503,19 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
       const sek = state.sekolahInfo || {};
       const kepalaPengurus = state.pengurusList.find(p => p.role === 'kepala_kreasi' && p.is_active);
       const pembinaPengurus = state.pengurusList.find(p => p.role === 'pembina' && p.is_active);
+      const tellerPengurus = state.pengurusList.find(p => p.role === 'teller' && p.is_active);
 
       const namaSekolah = sek.nama_sekolah?.trim() || 'KREASI 85 — KELOLA DAN REKAYASA SAMPAH INOVATIF';
       const alamatSekolah = sek.alamat_sekolah?.trim() || '';
 
-      const namaPembina = sek.nama_kepsek?.trim() || pembinaPengurus?.nama_lengkap || '........................................';
+      const namaPembina = sek.nama_kepsek?.trim() || pembinaPengurus?.nama_lengkap || '....................................';
       const nipPembina = sek.nip_kepsek?.trim() || pembinaPengurus?.nip || '........................';
 
-      const namaKetua = sek.nama_ketua?.trim() || kepalaPengurus?.nama_lengkap || '........................................';
+      const namaKetua = sek.nama_ketua?.trim() || kepalaPengurus?.nama_lengkap || '....................................';
       const nipKetua = sek.nip_ketua?.trim() || kepalaPengurus?.nip || '........................';
+
+      const namaTeller = sek.nama_teller?.trim() || tellerPengurus?.nama_lengkap || '....................................';
+      const nipTeller = sek.nip_teller?.trim() || tellerPengurus?.nip || '........................';
 
       const todayStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -2570,19 +2580,25 @@ CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WIT
             <tbody>${rowsHtml || '<tr><td colspan="5" style="border:1px solid #cbd5e1; padding:10px; text-align:center;">Tidak ada data transaksi.</td></tr>'}</tbody>
           </table>
 
-          <table style="width:100%; font-size:12px; margin-top:24px; text-align:center;">
+          <table style="width:100%; font-size:11.5px; margin-top:24px; text-align:center; table-layout:fixed;">
             <tr>
-              <td style="width:50%; vertical-align:top;">
+              <td style="width:33.33%; vertical-align:top; padding:0 6px;">
                 <p style="margin:0;">Mengetahui,</p>
-                <p style="margin:2px 0 56px 0; font-weight:700;">Pembina Kreasi 85 / Kepala Sekolah</p>
+                <p style="margin:2px 0 56px 0; font-weight:700;">Pembina Kreasi 85 /<br>Kepala Sekolah</p>
                 <p style="margin:0; font-weight:700; text-decoration:underline;">${namaPembina}</p>
-                <p style="margin:2px 0 0 0; font-size:11px;">NIP. ${nipPembina}</p>
+                <p style="margin:2px 0 0 0; font-size:10.5px;">NIP. ${nipPembina}</p>
               </td>
-              <td style="width:50%; vertical-align:top;">
-                <p style="margin:0;">Dicetak pada ${todayStr}</p>
-                <p style="margin:2px 0 56px 0; font-weight:700;">Kepala Kreasi 85</p>
+              <td style="width:33.33%; vertical-align:top; padding:0 6px;">
+                <p style="margin:0;">Diperiksa oleh,</p>
+                <p style="margin:2px 0 56px 0; font-weight:700;">Kepala Kreasi 85<br>&nbsp;</p>
                 <p style="margin:0; font-weight:700; text-decoration:underline;">${namaKetua}</p>
-                <p style="margin:2px 0 0 0; font-size:11px;">NIP. ${nipKetua}</p>
+                <p style="margin:2px 0 0 0; font-size:10.5px;">NIP. ${nipKetua}</p>
+              </td>
+              <td style="width:33.33%; vertical-align:top; padding:0 6px;">
+                <p style="margin:0;">Dicetak pada ${todayStr}</p>
+                <p style="margin:2px 0 56px 0; font-weight:700;">Teller Kreasi 85<br>&nbsp;</p>
+                <p style="margin:0; font-weight:700; text-decoration:underline;">${namaTeller}</p>
+                <p style="margin:2px 0 0 0; font-size:10.5px;">NIP. ${nipTeller}</p>
               </td>
             </tr>
           </table>
