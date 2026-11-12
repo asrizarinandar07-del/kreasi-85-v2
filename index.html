@@ -1,0 +1,2769 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#059669" />
+  <meta name="description" content="Kreasi 85 - Kelola dan Rekayasa Sampah Inovatif. Sampah Diolah, Kreativitas Bertambah." />
+  <title>Kreasi 85 — Kelola dan Rekayasa Sampah Inovatif</title>
+
+  <!-- PWA Manifest via Data URI -->
+  <link rel="manifest" href='data:application/manifest+json;utf8,{"name":"Kreasi 85 - Bank Sampah Sekolah","short_name":"Kreasi 85","description":"Kelola dan Rekayasa Sampah Inovatif","start_url":"./","display":"standalone","background_color":"#F8FAFC","theme_color":"#059669","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><circle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27%23059669%27/><text x=%2750%27 y=%2762%27 font-size=%2736%27 font-weight=%27bold%27 text-anchor=%27middle%27 fill=%27white%27>K85</text></svg>","sizes":"192x192","type":"image/svg+xml"}]}' />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            emerald: {
+              50: '#ECFDF5',
+              100: '#D1FAE5',
+              500: '#10B981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065F46',
+              900: '#064E3B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- SheetJS (XLSX) CDN untuk Impor & Ekspor Excel/CSV -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8FAFC;
+      color: #0F172A;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Print Styles untuk Struk & Laporan Resmi */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #print-area, #print-area * {
+        visibility: visible;
+      }
+      #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #FFFFFF !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased selection:bg-emerald-100 selection:text-emerald-900">
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- HIDDEN PRINT CONTAINER -->
+  <div id="print-area" class="hidden print:block"></div>
+
+  <!-- ==================== 1. HALAMAN LOGIN & SETUP ==================== -->
+  <div id="auth-screen" class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-emerald-50 via-slate-50 to-teal-50">
+    <div class="w-full max-w-md glass-card rounded-2xl border border-slate-200/80 shadow-xl overflow-hidden">
+      <!-- Top Eco Accent Bar -->
+      <div class="h-2 bg-gradient-to-r from-emerald-600 via-green-500 to-amber-400"></div>
+
+      <div class="p-6 sm:p-8">
+        <!-- Logo Container -->
+        <div class="flex flex-col items-center text-center mb-6">
+          <div id="login-logo-wrapper" class="relative group cursor-pointer mb-3" title="Klik untuk ganti logo kustom">
+            <div id="login-logo-render" class="w-28 h-28 flex items-center justify-center rounded-2xl bg-white border border-slate-100 shadow-sm p-1.5 overflow-hidden">
+              <img src="./logo.jpg" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" class="w-full h-full object-contain rounded-xl" />
+            </div>
+            <label for="logo-upload-input" class="absolute -bottom-1 -right-1 bg-emerald-600 hover:bg-emerald-700 text-white p-1.5 rounded-full shadow-md cursor-pointer transition-transform group-hover:scale-105" title="Unggah Logo Kustom">
+              <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+            </label>
+            <input type="file" id="logo-upload-input" accept="image/*" class="hidden" />
+          </div>
+
+          <h1 class="font-display text-2xl font-extrabold tracking-tight text-slate-900">KREASI 85</h1>
+          <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wider mt-0.5">Kelola dan Rekayasa Sampah Inovatif</p>
+          <p class="text-xs text-slate-500 italic mt-1">"Sampah Diolah, Kreativitas Bertambah."</p>
+        </div>
+
+        <!-- Status Koneksi Supabase Badge -->
+        <div id="supabase-status-banner" class="mb-5 p-3 rounded-xl border text-xs flex items-center justify-between gap-2 bg-slate-50 border-slate-200">
+          <div class="flex items-center gap-2 min-w-0">
+            <span id="db-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+            <span id="db-status-text" class="text-slate-600 truncate font-medium">Memeriksa koneksi database...</span>
+          </div>
+          <button type="button" onclick="openModal('modal-supabase-config')" class="text-emerald-700 hover:text-emerald-800 font-semibold underline shrink-0">
+            Atur DB
+          </button>
+        </div>
+
+        <!-- Form Login -->
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Email / Username</label>
+            <div class="relative">
+              <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="login-username" required autocomplete="username" placeholder="Masukkan email atau username..."
+                class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Kata Sandi / PIN</label>
+            <div class="relative">
+              <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input type="password" id="login-password" required autocomplete="current-password" placeholder="Masukkan kata sandi..."
+                class="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" />
+              <button type="button" id="toggle-password-btn" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="btn-login-submit"
+            class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold rounded-xl shadow-sm shadow-emerald-600/20 flex items-center justify-center gap-2 transition cursor-pointer">
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            <span>Masuk ke Aplikasi</span>
+          </button>
+        </form>
+
+        <!-- Setup Admin Pertama Kali & Panduan SQL -->
+        <div class="mt-6 pt-5 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+          <button type="button" onclick="openFirstAdminSetup()" class="text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1.5">
+            <i data-lucide="shield-plus" class="w-3.5 h-3.5"></i>
+            <span>Setup Admin Pertama Kali</span>
+          </button>
+          <button type="button" onclick="openModal('modal-sql-guide')" class="text-slate-500 hover:text-slate-800 font-medium flex items-center gap-1.5">
+            <i data-lucide="database" class="w-3.5 h-3.5"></i>
+            <span>Skrip SQL Supabase</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-6 text-xs text-slate-400 text-center">
+      &copy; <span id="year-now"></span> Kreasi 85 — Sistem Pelaporan Bank Sampah Sekolah
+    </p>
+  </div>
+
+  <!-- ==================== 2. SHELL UTAMA APLIKASI (SETELAH LOGIN) ==================== -->
+  <div id="app-shell" class="hidden min-h-screen flex-1 flex flex-col lg:flex-row">
+
+    <!-- DESKTOP LEFT SIDEBAR (>= 1024px) -->
+    <aside class="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-slate-200 z-30">
+      <!-- Brand Header -->
+      <div class="p-5 border-b border-slate-100 flex items-center gap-3">
+        <div id="sidebar-logo-render" class="w-12 h-12 rounded-xl bg-emerald-50/60 border border-slate-100 flex items-center justify-center p-1 shrink-0 overflow-hidden">
+          <img src="./logo.jpg" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" class="w-full h-full object-contain rounded-lg" />
+        </div>
+        <div class="min-w-0">
+          <h2 class="font-display font-extrabold text-base text-slate-900 tracking-tight truncate">KREASI 85</h2>
+          <p class="text-[11px] text-emerald-700 font-medium leading-tight line-clamp-2">Kelola & Rekayasa Sampah Inovatif</p>
+        </div>
+      </div>
+
+      <!-- User Profile Pill -->
+      <div class="px-4 py-3 mx-3 mt-4 rounded-xl bg-slate-50 border border-slate-200/70">
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <span id="sidebar-role-badge" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+            ROLE
+          </span>
+          <button type="button" onclick="openModal('modal-supabase-config')" title="Pengaturan Database" class="text-slate-400 hover:text-slate-600">
+            <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+        <p id="sidebar-user-name" class="text-sm font-bold text-slate-800 truncate">-</p>
+        <p id="sidebar-user-sub" class="text-xs text-slate-500 truncate">-</p>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav id="desktop-nav" class="flex-1 px-3 py-4 space-y-1 overflow-y-auto"></nav>
+
+      <!-- Bottom Actions -->
+      <div class="p-4 border-t border-slate-100 space-y-2">
+        <label for="logo-upload-sidebar" class="w-full py-2 px-3 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100 flex items-center gap-2 cursor-pointer transition">
+          <i data-lucide="image-plus" class="w-4 h-4 text-emerald-600"></i>
+          <span>Ganti Logo Aplikasi</span>
+        </label>
+        <input type="file" id="logo-upload-sidebar" accept="image/*" class="hidden" />
+
+        <button type="button" onclick="handleLogout()" class="w-full py-2.5 px-3 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 flex items-center gap-2 transition cursor-pointer">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+          <span>Keluar Aplikasi</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MOBILE TOP HEADER (< 1024px) -->
+    <header class="lg:hidden sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div id="mobile-logo-render" class="w-9 h-9 rounded-lg bg-emerald-50 border border-slate-100 flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
+          <img src="./logo.jpg" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" class="w-full h-full object-contain rounded-md" />
+        </div>
+        <div class="min-w-0">
+          <h1 class="font-display font-extrabold text-sm text-slate-900 leading-none">KREASI 85</h1>
+          <p id="mobile-user-subtitle" class="text-[11px] text-slate-500 truncate mt-0.5">-</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <span id="mobile-role-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800">ROLE</span>
+        <button type="button" onclick="handleLogout()" title="Keluar" class="p-2 text-slate-500 hover:text-red-600 rounded-lg">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main class="flex-1 lg:pl-64 pb-24 lg:pb-10">
+      <!-- Desktop Top Bar -->
+      <div class="hidden lg:flex h-16 bg-white/80 backdrop-blur-sm border-b border-slate-200 px-8 items-center justify-between sticky top-0 z-20">
+        <div>
+          <h1 id="page-heading" class="font-display text-lg font-bold text-slate-900">Dasbor Utama</h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="refreshAllData()" id="btn-refresh-data" class="py-1.5 px-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 flex items-center gap-1.5 transition cursor-pointer">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>Sinkronkan Data</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DYNAMIC VIEWPORT CONTAINER -->
+      <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- ==================== VIEW A: DASBOR UTAMA / EKSEKUTIF ==================== -->
+        <section id="view-dashboard" class="hidden space-y-6">
+          <!-- Filter Bar -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Periode Waktu</label>
+                <select id="dash-filter-period" onchange="handleDashPeriodChange()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                  <option value="all">Semua Waktu</option>
+                  <option value="today">Hari Ini</option>
+                  <option value="month">Bulan Ini</option>
+                  <option value="custom">Rentang Tanggal Kustom</option>
+                </select>
+              </div>
+              <div id="dash-custom-dates" class="hidden sm:col-span-2 grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Dari Tanggal</label>
+                  <input type="date" id="dash-date-start" onchange="renderDashboard()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Sampai Tanggal</label>
+                  <input type="date" id="dash-date-end" onchange="renderDashboard()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm" />
+                </div>
+              </div>
+              <div id="dash-filter-kelas-wrap">
+                <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Filter Kelas</label>
+                <select id="dash-filter-kelas" onchange="renderDashboard()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                  <option value="all">Semua Kelas</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button type="button" id="btn-print-official-report" onclick="printOfficialReport()"
+                class="w-full sm:w-auto py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                <span>Cetak Laporan Resmi</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Hero KPI Total Keseluruhan -->
+          <div class="bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-700 rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
+            <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 text-emerald-50 text-xs font-semibold mb-2">
+                  <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+                  <span id="dash-hero-label">Akumulasi Total Sampah Terkumpul</span>
+                </span>
+                <div class="flex items-baseline gap-3">
+                  <h2 id="kpi-total-kg" class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight tabular-nums">0,000 Kg</h2>
+                  <span id="kpi-total-gram" class="text-sm sm:text-base font-medium text-emerald-100 tabular-nums">(0 gram)</span>
+                </div>
+                <p id="kpi-total-nota" class="text-xs text-emerald-100/90 mt-2">Berdasarkan 0 nota penyetoran tercatat</p>
+              </div>
+              <div class="hidden sm:flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-xs">
+                <i data-lucide="recycle" class="w-9 h-9 text-white"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Kartu Kategori Sampah (Semantik Warna Baku) -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- 1. Kertas (Biru) -->
+            <div class="bg-white rounded-xl border border-slate-200 border-t-4 border-t-blue-600 p-4 sm:p-5 shadow-xs">
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">1. Kertas</span>
+                <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i>
+              </div>
+              <p id="kpi-kertas-kg" class="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">0,000 Kg</p>
+              <p id="kpi-kertas-gram" class="text-xs text-slate-500 tabular-nums mt-1">0 gram</p>
+            </div>
+
+            <!-- 2. Plastik (Kuning/Amber) -->
+            <div class="bg-white rounded-xl border border-slate-200 border-t-4 border-t-amber-500 p-4 sm:p-5 shadow-xs">
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">2. Plastik</span>
+                <i data-lucide="cup-soda" class="w-4 h-4 text-amber-600"></i>
+              </div>
+              <p id="kpi-plastik-kg" class="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">0,000 Kg</p>
+              <p id="kpi-plastik-gram" class="text-xs text-slate-500 tabular-nums mt-1">0 gram</p>
+            </div>
+
+            <!-- 3. Organik (Hijau) -->
+            <div class="bg-white rounded-xl border border-slate-200 border-t-4 border-t-green-600 p-4 sm:p-5 shadow-xs">
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200">3. Organik</span>
+                <i data-lucide="leaf" class="w-4 h-4 text-green-600"></i>
+              </div>
+              <p id="kpi-organik-kg" class="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">0,000 Kg</p>
+              <p id="kpi-organik-gram" class="text-xs text-slate-500 tabular-nums mt-1">0 gram</p>
+            </div>
+
+            <!-- 4. B3 (Merah) -->
+            <div class="bg-white rounded-xl border border-slate-200 border-t-4 border-t-red-600 p-4 sm:p-5 shadow-xs">
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200">4. B3</span>
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-red-600"></i>
+              </div>
+              <p id="kpi-b3-kg" class="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">0,000 Kg</p>
+              <p id="kpi-b3-gram" class="text-xs text-slate-500 tabular-nums mt-1">0 gram</p>
+            </div>
+          </div>
+
+          <!-- Visualisasi Proporsi Komposisi Sampah (Tanpa Papan Peringkat) -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 shadow-xs">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-display text-base font-bold text-slate-900">Komposisi Jenis Sampah</h3>
+                <p class="text-xs text-slate-500">Proporsi berat berdasarkan kategori terpilah (Kertas, Plastik, Organik, B3)</p>
+              </div>
+            </div>
+
+            <!-- Stacked Bar -->
+            <div class="w-full h-5 bg-slate-100 rounded-full overflow-hidden flex mb-5" id="composition-stacked-bar">
+              <div class="h-full bg-slate-200 w-full"></div>
+            </div>
+
+            <!-- Bar Detail Per Kategori -->
+            <div id="composition-bars-list" class="space-y-3"></div>
+          </div>
+
+          <!-- Rekapitulasi Per Kelas (Tanpa Papan Peringkat / Urut Abjad Kelas) -->
+          <div id="dash-rekap-kelas-card" class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <h3 class="font-display text-base font-bold text-slate-900">Rekapitulasi Setoran Per Kelas</h3>
+                <p class="text-xs text-slate-500">Akumulasi berat sampah terpilah berdasarkan daftar kelas (urut nama kelas)</p>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200 font-bold uppercase text-slate-500">
+                    <th class="py-3 px-4">Kelas & Guru Kelas</th>
+                    <th class="py-3 px-4 text-right text-blue-700">Kertas (Kg)</th>
+                    <th class="py-3 px-4 text-right text-amber-700">Plastik (Kg)</th>
+                    <th class="py-3 px-4 text-right text-green-700">Organik (Kg)</th>
+                    <th class="py-3 px-4 text-right text-red-700">B3 (Kg)</th>
+                    <th class="py-3 px-4 text-right text-slate-900">Total (Kg)</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-rekap-kelas-tbody" class="divide-y divide-slate-100 tabular-nums"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW B: FORM TRANSAKSI BARU (TELLER & ADMIN) ==================== -->
+        <section id="view-transaksi-baru" class="hidden max-w-3xl mx-auto space-y-5">
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="p-5 sm:p-6 border-b border-slate-100 bg-emerald-50/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h2 class="font-display text-lg font-bold text-slate-900">Input Transaksi Penyetoran Sampah</h2>
+                <p class="text-xs text-slate-500">Satu nota dapat memuat beberapa jenis sampah sekaligus (input berat dalam Gram)</p>
+              </div>
+              <span id="form-nota-number" class="px-3 py-1 rounded-lg bg-white border border-emerald-200 text-emerald-800 font-mono text-xs font-bold self-start sm:self-auto">
+                K85-...
+              </span>
+            </div>
+
+            <form id="form-transaksi" class="p-5 sm:p-6 space-y-5">
+              <!-- Identitas Nasabah & Waktu -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Pilih Kelas (Nasabah) *</label>
+                  <select id="trx-nasabah-id" required onchange="handleSelectNasabahTrx()"
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="">-- Pilih Kelas --</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Tanggal & Waktu Setor *</label>
+                  <input type="datetime-local" id="trx-tanggal" required
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                </div>
+              </div>
+
+              <!-- Info Wali Kelas Otomatis -->
+              <div id="trx-guru-info" class="hidden p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                  <i data-lucide="user-check" class="w-4 h-4"></i>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[11px] font-semibold uppercase text-emerald-700">Guru Kelas Penanggung Jawab</p>
+                  <p id="trx-guru-nama" class="text-sm font-bold text-slate-900 truncate">-</p>
+                </div>
+              </div>
+
+              <!-- Daftar Item Sampah Dinamis -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Rincian Sampah Disetorkan *</label>
+                  <span class="text-[11px] text-slate-500">Maksimal 4 kategori per nota</span>
+                </div>
+
+                <div id="trx-items-container" class="space-y-3"></div>
+
+                <button type="button" id="btn-add-trx-item" onclick="addTransactionItemRow()"
+                  class="w-full py-2.5 px-4 rounded-xl border-2 border-dashed border-emerald-400 hover:border-emerald-600 hover:bg-emerald-50/50 text-emerald-700 text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer">
+                  <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                  <span>+ Tambah Jenis Sampah</span>
+                </button>
+              </div>
+
+              <!-- Ringkasan Kalkulasi Real-Time -->
+              <div class="p-4 rounded-xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <p class="text-xs text-slate-400 uppercase font-semibold">Total Berat Keseluruhan Nota</p>
+                  <p id="trx-live-total-gram" class="text-sm text-emerald-400 font-semibold tabular-nums mt-0.5">0 Gram</p>
+                </div>
+                <div class="sm:text-right">
+                  <p class="text-[11px] text-slate-400">Konversi Otomatis (Kg)</p>
+                  <p id="trx-live-total-kg" class="font-display text-2xl sm:text-3xl font-extrabold text-white tabular-nums">0,000 Kg</p>
+                </div>
+              </div>
+
+              <button type="submit" id="btn-submit-transaksi"
+                class="w-full py-3.5 px-5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 transition cursor-pointer">
+                <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                <span>Simpan Transaksi & Lihat Struk</span>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW C: RIWAYAT TRANSAKSI ==================== -->
+        <section id="view-riwayat" class="hidden space-y-5">
+          <!-- Filter Bar Riwayat -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Cari No. Nota / Kelas</label>
+              <div class="relative">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="riwayat-search" oninput="renderRiwayatTable()" placeholder="Cari nota atau kelas..."
+                  class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+              </div>
+            </div>
+
+            <div id="riwayat-kelas-filter-wrap">
+              <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Filter Kelas</label>
+              <select id="riwayat-filter-kelas" onchange="renderRiwayatTable()"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm">
+                <option value="all">Semua Kelas</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Jenis Sampah</label>
+              <select id="riwayat-filter-jenis" onchange="renderRiwayatTable()"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm">
+                <option value="all">Semua Jenis</option>
+                <option value="Kertas">1. Kertas</option>
+                <option value="Plastik">2. Plastik</option>
+                <option value="Organik">3. Organik</option>
+                <option value="B3">4. B3</option>
+              </select>
+            </div>
+
+            <div class="flex items-end">
+              <button type="button" onclick="exportTransactionsExcel()"
+                class="w-full py-2 px-3 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition cursor-pointer">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                <span>Ekspor Riwayat (.xlsx)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabel Riwayat -->
+          <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th class="py-3.5 px-4">No. Nota & Waktu</th>
+                    <th class="py-3.5 px-4">Kelas & Guru Kelas</th>
+                    <th class="py-3.5 px-4">Rincian Jenis Sampah</th>
+                    <th class="py-3.5 px-4 text-right">Total Berat</th>
+                    <th class="py-3.5 px-4">Teller</th>
+                    <th class="py-3.5 px-4 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="riwayat-tbody" class="divide-y divide-slate-100 text-sm"></tbody>
+              </table>
+            </div>
+            <div id="riwayat-empty" class="hidden p-10 text-center">
+              <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="inbox" class="w-6 h-6"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-700">Belum ada transaksi tercatat</p>
+              <p class="text-xs text-slate-500 mt-1">Data penyetoran sampah yang disimpan akan muncul di sini.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW D: DATA PENGURUS (ADMIN) ==================== -->
+        <section id="view-pengurus" class="hidden space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+            <div>
+              <h2 class="font-display text-base font-bold text-slate-900">Data Pengurus Kreasi 85</h2>
+              <p class="text-xs text-slate-500">Kelola akun Admin, Teller, Kepala Kreasi 85, dan Pembina (Kepala Sekolah)</p>
+            </div>
+            <button type="button" onclick="openPengurusModal()"
+              class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition cursor-pointer">
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              <span>+ Tambah Pengurus</span>
+            </button>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th class="py-3.5 px-4">Nama Lengkap & Gelar</th>
+                    <th class="py-3.5 px-4">NIP / NUPTK</th>
+                    <th class="py-3.5 px-4">Jabatan / Role</th>
+                    <th class="py-3.5 px-4">Username / Email</th>
+                    <th class="py-3.5 px-4">Status</th>
+                    <th class="py-3.5 px-4 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="pengurus-tbody" class="divide-y divide-slate-100 text-sm"></tbody>
+              </table>
+            </div>
+            <div id="pengurus-empty" class="hidden p-10 text-center">
+              <p class="text-sm font-semibold text-slate-700">Belum ada data pengurus</p>
+              <p class="text-xs text-slate-500 mt-1">Klik tombol "+ Tambah Pengurus" untuk menambahkan pengelola Bank Sampah.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW E: DATA NASABAH / GURU KELAS (ADMIN) ==================== -->
+        <section id="view-nasabah" class="hidden space-y-5">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+              <h2 class="font-display text-base font-bold text-slate-900">Data Nasabah (Guru Kelas)</h2>
+              <p class="text-xs text-slate-500">Kelola daftar kelas, wali kelas penanggung jawab, serta impor/ekspor massal Excel</p>
+            </div>
+
+            <div id="nasabah-admin-actions" class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="downloadNasabahTemplate()"
+                class="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition cursor-pointer">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>Unduh Template</span>
+              </button>
+
+              <button type="button" onclick="openModal('modal-import-nasabah')"
+                class="py-2 px-3 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition cursor-pointer">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Impor Massal</span>
+              </button>
+
+              <button type="button" onclick="exportNasabahExcel()"
+                class="py-2 px-3 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 transition cursor-pointer">
+                <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+                <span>Ekspor Data</span>
+              </button>
+
+              <button type="button" onclick="openNasabahModal()"
+                class="py-2 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 transition cursor-pointer">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Tambah Nasabah</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="p-3 border-b border-slate-100">
+              <input type="text" id="nasabah-search" oninput="renderNasabahTable()" placeholder="Cari nama kelas atau nama guru kelas..."
+                class="w-full sm:w-72 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th class="py-3.5 px-4">Kelas</th>
+                    <th class="py-3.5 px-4">Nama Guru Kelas & Gelar</th>
+                    <th class="py-3.5 px-4">NIP</th>
+                    <th class="py-3.5 px-4">Username Login</th>
+                    <th class="py-3.5 px-4">Status</th>
+                    <th class="py-3.5 px-4 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="nasabah-tbody" class="divide-y divide-slate-100 text-sm"></tbody>
+              </table>
+            </div>
+            <div id="nasabah-empty" class="hidden p-10 text-center">
+              <p class="text-sm font-semibold text-slate-700">Belum ada data nasabah (kelas)</p>
+              <p class="text-xs text-slate-500 mt-1">Tambahkan kelas secara manual atau gunakan fitur Impor Massal Excel.</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- MOBILE BOTTOM NAVIGATION BAR (< 1024px) -->
+    <nav id="mobile-bottom-nav" class="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 h-16 z-30 flex items-center justify-around px-1 shadow-lg"></nav>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- MODAL 1: KONFIGURASI SUPABASE -->
+  <div id="modal-supabase-config" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-display text-lg font-bold text-slate-900">Pengaturan Koneksi Supabase</h3>
+        <button type="button" onclick="closeModal('modal-supabase-config')" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Masukkan <strong>Project URL</strong> dan <strong>Anon Public Key</strong> dari dasbor Supabase Anda. Konfigurasi ini disimpan aman di browser perangkat ini sehingga aplikasi langsung terhubung tanpa perlu mengubah kode di Vercel.
+      </p>
+      <form id="form-supabase-config" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Supabase Project URL</label>
+          <input type="url" id="cfg-supabase-url" required placeholder="https://xxxxxxxxxxxx.supabase.co"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Supabase Anon Public Key</label>
+          <textarea id="cfg-supabase-key" rows="3" required placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none"></textarea>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('modal-supabase-config')" class="py-2 px-4 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
+          <button type="submit" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">Simpan & Hubungkan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: SETUP ADMIN PERTAMA KALI -->
+  <div id="modal-first-admin" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-display text-lg font-bold text-slate-900">Setup Admin Pertama Kali</h3>
+        <button type="button" onclick="closeModal('modal-first-admin')" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600">
+        Fitur ini hanya aktif jika tabel <code>pengurus</code> di database Supabase Anda masih kosong (0 baris). Buat akun Admin utama untuk mulai mengelola pengurus dan nasabah.
+      </p>
+      <form id="form-first-admin" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap & Gelar *</label>
+          <input type="text" id="first-admin-nama" required placeholder="Contoh: Budi Santoso, S.Pd"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">NIP (Opsional)</label>
+          <input type="text" id="first-admin-nip" placeholder="198501012010011001"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Username / Email Login *</label>
+          <input type="text" id="first-admin-user" required placeholder="admin@kreasi85.sch.id"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi *</label>
+          <input type="password" id="first-admin-pass" required minlength="4" placeholder="Minimal 4 karakter"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('modal-first-admin')" class="py-2 px-4 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600">Batal</button>
+          <button type="submit" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">Buat Akun Admin</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: PANDUAN SQL SUPABASE -->
+  <div id="modal-sql-guide" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-display text-lg font-bold text-slate-900">Skrip SQL Database Kreasi 85</h3>
+          <p class="text-xs text-slate-500">Salin dan jalankan di SQL Editor Supabase Anda</p>
+        </div>
+        <button type="button" onclick="closeModal('modal-sql-guide')" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="my-4 overflow-y-auto flex-1 bg-slate-900 text-emerald-300 p-4 rounded-xl font-mono text-xs leading-relaxed">
+        <pre id="sql-script-content"></pre>
+      </div>
+      <div class="flex items-center justify-end gap-2">
+        <button type="button" onclick="copySqlScript()" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span>Salin Skrip SQL</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: TAMBAH / EDIT PENGURUS -->
+  <div id="modal-pengurus" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 id="modal-pengurus-title" class="font-display text-lg font-bold text-slate-900">Tambah Pengurus</h3>
+        <button type="button" onclick="closeModal('modal-pengurus')" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <form id="form-pengurus" class="space-y-3">
+        <input type="hidden" id="pengurus-id" />
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap & Gelar *</label>
+          <input type="text" id="pengurus-nama" required placeholder="Contoh: Dra. Siti Aminah, M.Pd"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">NIP / NUPTK (Untuk Tanda Tangan Laporan)</label>
+          <input type="text" id="pengurus-nip" placeholder="Opsional"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Jabatan / Role Sistem *</label>
+          <select id="pengurus-role" required class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm bg-white">
+            <option value="teller">Teller (Petugas Penimbangan)</option>
+            <option value="kepala_kreasi">Kepala Kreasi 85</option>
+            <option value="pembina">Pembina Kreasi 85 (Kepala Sekolah)</option>
+            <option value="admin">Admin Sistem</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Username / Email Login *</label>
+          <input type="text" id="pengurus-username" required placeholder="teller1@kreasi85.sch.id"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi / PIN *</label>
+          <input type="text" id="pengurus-password" required placeholder="Masukkan kata sandi login"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="pengurus-active" checked class="w-4 h-4 text-emerald-600 rounded" />
+          <label for="pengurus-active" class="text-xs font-medium text-slate-700">Akun Aktif (Dapat Login)</label>
+        </div>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" onclick="closeModal('modal-pengurus')" class="py-2 px-4 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600">Batal</button>
+          <button type="submit" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">Simpan Data</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: TAMBAH / EDIT NASABAH (GURU KELAS) -->
+  <div id="modal-nasabah" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 id="modal-nasabah-title" class="font-display text-lg font-bold text-slate-900">Tambah Nasabah (Kelas)</h3>
+        <button type="button" onclick="closeModal('modal-nasabah')" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <form id="form-nasabah" class="space-y-3">
+        <input type="hidden" id="nasabah-id" />
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Kelas *</label>
+          <input type="text" id="nasabah-kelas" required placeholder="Contoh: 6-A atau XII IPA 1"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Guru Kelas & Gelar *</label>
+          <input type="text" id="nasabah-guru" required placeholder="Contoh: Asriza Rinandar, S.Pd"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">NIP Guru (Opsional)</label>
+          <input type="text" id="nasabah-nip" placeholder="Opsional"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Username Login Kelas *</label>
+          <input type="text" id="nasabah-username" required placeholder="kelas6a"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi / PIN *</label>
+          <input type="text" id="nasabah-password" required placeholder="Masukkan kata sandi kelas"
+            class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-sm" />
+        </div>
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="nasabah-active" checked class="w-4 h-4 text-emerald-600 rounded" />
+          <label for="nasabah-active" class="text-xs font-medium text-slate-700">Kelas Aktif</label>
+        </div>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" onclick="closeModal('modal-nasabah')" class="py-2 px-4 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600">Batal</button>
+          <button type="submit" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">Simpan Nasabah</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 6: IMPOR MASSAL NASABAH (EXCEL / CSV) -->
+  <div id="modal-import-nasabah" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-3xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-display text-lg font-bold text-slate-900">Impor Massal Data Nasabah (Guru Kelas)</h3>
+          <p class="text-xs text-slate-500">Unggah file Excel (.xlsx/.xls) atau CSV sesuai format template</p>
+        </div>
+        <button type="button" onclick="closeModal('modal-import-nasabah')" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="my-4 space-y-4 overflow-y-auto flex-1">
+        <div class="p-4 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-center">
+          <input type="file" id="import-excel-file" accept=".xlsx,.xls,.csv" onchange="handleImportFileSelect(event)" class="hidden" />
+          <label for="import-excel-file" class="cursor-pointer flex flex-col items-center">
+            <i data-lucide="file-up" class="w-8 h-8 text-emerald-600 mb-2"></i>
+            <span class="text-sm font-bold text-slate-800">Klik untuk memilih file Excel / CSV</span>
+            <span class="text-xs text-slate-500 mt-1">Kolom wajib: Nama_Kelas, Nama_Guru_Kelas, NIP, Username, Password</span>
+          </label>
+        </div>
+
+        <div id="import-preview-wrapper" class="hidden space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase text-slate-700">Pratinjau Validasi Data (<span id="import-valid-count">0</span> siap diimpor)</h4>
+          </div>
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-600 font-bold">
+                <tr>
+                  <th class="p-2.5">Status</th>
+                  <th class="p-2.5">Kelas</th>
+                  <th class="p-2.5">Guru Kelas</th>
+                  <th class="p-2.5">Username</th>
+                  <th class="p-2.5">Keterangan</th>
+                </tr>
+              </thead>
+              <tbody id="import-preview-tbody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+        <button type="button" onclick="downloadNasabahTemplate()" class="text-xs font-semibold text-emerald-700 hover:underline">
+          Unduh Template Kosong
+        </button>
+        <div class="flex gap-2">
+          <button type="button" onclick="closeModal('modal-import-nasabah')" class="py-2 px-4 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600">Batal</button>
+          <button type="button" id="btn-confirm-import" disabled onclick="executeImportNasabah()"
+            class="py-2 px-4 rounded-xl bg-emerald-600 disabled:bg-slate-300 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">
+            Proses Impor ke Database
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 7: EDIT TRANSAKSI (ADMIN & KEPALA KREASI 85) -->
+  <div id="modal-edit-transaksi" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="font-display text-lg font-bold text-slate-900">Edit Nota Transaksi</h3>
+          <p id="edit-nota-subtitle" class="text-xs font-mono text-emerald-700 font-bold">K85-...</p>
+        </div>
+        <button type="button" onclick="closeModal('modal-edit-transaksi')" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-edit-transaksi" class="my-4 space-y-4 overflow-y-auto flex-1 pr-1">
+        <input type="hidden" id="edit-trx-id" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Kelas (Nasabah) *</label>
+            <select id="edit-trx-nasabah-id" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal & Waktu *</label>
+            <input type="datetime-local" id="edit-trx-tanggal" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm" />
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold text-slate-700">Rincian Item Sampah (Gram)</label>
+            <button type="button" onclick="addEditTransactionItemRow()" class="text-xs font-bold text-emerald-700 hover:underline">+ Tambah Baris</button>
+          </div>
+          <div id="edit-trx-items-container" class="space-y-2.5"></div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-100 flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-700">Total Setelah Koreksi:</span>
+          <span id="edit-trx-live-total" class="font-display text-lg font-extrabold text-emerald-700 tabular-nums">0,000 Kg (0 gr)</span>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('modal-edit-transaksi')" class="py-2 px-4 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600">Batal</button>
+          <button type="submit" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 8: STRUK BUKTI PENYETORAN -->
+  <div id="modal-struk" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-display text-base font-bold text-slate-900">Struk Bukti Setor Sampah</h3>
+        <button type="button" onclick="closeModal('modal-struk')" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="struk-preview-box" class="p-4 rounded-xl border border-slate-200 bg-slate-50/70 text-xs space-y-3"></div>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button type="button" onclick="copyStrukWhatsApp()" class="py-2.5 px-3 rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+          <i data-lucide="share-2" class="w-4 h-4"></i>
+          <span>Salin Teks WA</span>
+        </button>
+        <button type="button" onclick="printStrukNota()" class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span>Cetak Struk</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    // =========================================================================
+    // 1. KONFIGURASI SUPABASE (IS_PREVIEW = false, 100% DATABASE REAL-TIME)
+    // =========================================================================
+    const IS_PREVIEW = false;
+    const SUPABASE_URL = window.SUPABASE_URL || localStorage.getItem('k85_supabase_url') || "https://YOUR_PROJECT_ID.supabase.co";
+    const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || localStorage.getItem('k85_supabase_key') || "YOUR_SUPABASE_ANON_KEY";
+
+    let supabase = null;
+    let isDbConfigured = false;
+
+    function initSupabaseClient(url, key) {
+      const dot = document.getElementById('db-status-dot');
+      const txt = document.getElementById('db-status-text');
+      const validUrl = url && url.startsWith('https://') && !url.includes('YOUR_PROJECT_ID');
+      const validKey = key && key.length > 20 && !key.includes('YOUR_SUPABASE_ANON_KEY');
+
+      if (!validUrl || !validKey) {
+        isDbConfigured = false;
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0';
+        if (txt) txt.textContent = 'Database Supabase belum diatur. Klik "Atur DB"';
+        return false;
+      }
+
+      try {
+        supabase = createClient(url, key);
+        isDbConfigured = true;
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0';
+        if (txt) txt.textContent = 'Terhubung ke Supabase Cloud';
+        return true;
+      } catch (err) {
+        isDbConfigured = false;
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-red-500 shrink-0';
+        if (txt) txt.textContent = 'Konfigurasi Supabase tidak valid';
+        return false;
+      }
+    }
+
+    // =========================================================================
+    // 2. SKRIP SQL SUPABASE (TABEL, TRIGGER KONVERSI OTOMATIS & RLS)
+    // =========================================================================
+    const SQL_SETUP_SCRIPT = `-- JALANKAN SKRIP INI DI SQL EDITOR SUPABASE UNTUK KREASI 85
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- 1. Tabel Pengurus Kreasi 85
+CREATE TABLE IF NOT EXISTS pengurus (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  nama_lengkap VARCHAR(150) NOT NULL,
+  nip VARCHAR(30),
+  role VARCHAR(30) NOT NULL CHECK (role IN ('admin', 'teller', 'kepala_kreasi', 'pembina')),
+  email_username VARCHAR(100) UNIQUE NOT NULL,
+  password_pin VARCHAR(100) NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 2. Tabel Nasabah (Guru Kelas)
+CREATE TABLE IF NOT EXISTS nasabah_kelas (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  nama_kelas VARCHAR(30) UNIQUE NOT NULL,
+  nama_guru_kelas VARCHAR(150) NOT NULL,
+  nip_guru VARCHAR(30),
+  email_username VARCHAR(100) UNIQUE NOT NULL,
+  password_pin VARCHAR(100) NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. Tabel Header Nota Transaksi
+CREATE TABLE IF NOT EXISTS transaksi_nota (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  nomor_nota VARCHAR(40) UNIQUE NOT NULL,
+  tanggal_setor TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  nasabah_id UUID NOT NULL REFERENCES nasabah_kelas(id) ON DELETE RESTRICT,
+  teller_id UUID REFERENCES pengurus(id) ON DELETE SET NULL,
+  teller_nama VARCHAR(150),
+  total_berat_gram NUMERIC(12,2) NOT NULL DEFAULT 0,
+  total_berat_kg NUMERIC(12,4) NOT NULL DEFAULT 0,
+  updated_by VARCHAR(150),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4. Tabel Rincian Item Sampah per Nota
+CREATE TABLE IF NOT EXISTS transaksi_detail (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  nota_id UUID NOT NULL REFERENCES transaksi_nota(id) ON DELETE CASCADE,
+  jenis_sampah VARCHAR(20) NOT NULL CHECK (jenis_sampah IN ('Kertas', 'Plastik', 'Organik', 'B3')),
+  berat_gram NUMERIC(12,2) NOT NULL CHECK (berat_gram > 0),
+  berat_kg NUMERIC(12,4) NOT NULL,
+  keterangan TEXT
+);
+
+-- 5. Trigger Otomatis Konversi Gram -> Kg & Hitung Ulang Total Nota
+CREATE OR REPLACE FUNCTION fn_sync_berat_kreasi85()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_nota_id UUID;
+BEGIN
+  IF (TG_OP = 'INSERT' OR TG_OP = 'UPDATE') THEN
+    NEW.berat_kg := ROUND((NEW.berat_gram / 1000.0)::numeric, 4);
+    v_nota_id := NEW.nota_id;
+  ELSE
+    v_nota_id := OLD.nota_id;
+  END IF;
+
+  IF (TG_OP = 'DELETE') THEN
+    UPDATE transaksi_nota
+    SET total_berat_gram = COALESCE((SELECT SUM(berat_gram) FROM transaksi_detail WHERE nota_id = v_nota_id), 0),
+        total_berat_kg = COALESCE((SELECT ROUND((SUM(berat_gram) / 1000.0)::numeric, 4) FROM transaksi_detail WHERE nota_id = v_nota_id), 0),
+        updated_at = NOW()
+    WHERE id = v_nota_id;
+    RETURN OLD;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fn_after_detail_total_kreasi85()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE transaksi_nota
+  SET total_berat_gram = COALESCE((SELECT SUM(berat_gram) FROM transaksi_detail WHERE nota_id = NEW.nota_id), 0),
+      total_berat_kg = COALESCE((SELECT ROUND((SUM(berat_gram) / 1000.0)::numeric, 4) FROM transaksi_detail WHERE nota_id = NEW.nota_id), 0),
+      updated_at = NOW()
+  WHERE id = NEW.nota_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_before_detail_berat ON transaksi_detail;
+CREATE TRIGGER trg_before_detail_berat
+BEFORE INSERT OR UPDATE ON transaksi_detail
+FOR EACH ROW EXECUTE FUNCTION fn_sync_berat_kreasi85();
+
+DROP TRIGGER IF EXISTS trg_after_detail_total ON transaksi_detail;
+CREATE TRIGGER trg_after_detail_total
+AFTER INSERT OR UPDATE ON transaksi_detail
+FOR EACH ROW EXECUTE FUNCTION fn_after_detail_total_kreasi85();
+
+DROP TRIGGER IF EXISTS trg_after_detail_delete ON transaksi_detail;
+CREATE TRIGGER trg_after_detail_delete
+AFTER DELETE ON transaksi_detail
+FOR EACH ROW EXECUTE FUNCTION fn_sync_berat_kreasi85();
+
+-- 6. Kebijakan Row-Level Security (RLS)
+ALTER TABLE pengurus ENABLE ROW LEVEL SECURITY;
+ALTER TABLE nasabah_kelas ENABLE ROW LEVEL SECURITY;
+ALTER TABLE transaksi_nota ENABLE ROW LEVEL SECURITY;
+ALTER TABLE transaksi_detail ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Akses API Pengurus" ON pengurus;
+CREATE POLICY "Akses API Pengurus" ON pengurus FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Akses API Nasabah" ON nasabah_kelas;
+CREATE POLICY "Akses API Nasabah" ON nasabah_kelas FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Akses API Nota" ON transaksi_nota;
+CREATE POLICY "Akses API Nota" ON transaksi_nota FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Akses API Detail" ON transaksi_detail;
+CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH CHECK (true);`;
+
+    // =========================================================================
+    // 3. STATE APLIKASI (100% KOSONG TANPA DATA DUMMY)
+    // =========================================================================
+    const state = {
+      currentUser: null, // { id, nama, nip, role, username, kelas_id? }
+      activeView: 'dashboard',
+      pengurusList: [],
+      nasabahList: [],
+      transaksiList: [], // Berisi nota beserta array .details
+      selectedStrukNota: null,
+      importBuffer: []
+    };
+
+    const KATEGORI_CONFIG = {
+      Kertas: { label: '1. Kertas', badge: 'bg-blue-50 text-blue-700 border-blue-200', bar: 'bg-blue-600', hex: '#2563EB' },
+      Plastik: { label: '2. Plastik', badge: 'bg-amber-50 text-amber-700 border-amber-200', bar: 'bg-amber-500', hex: '#D97706' },
+      Organik: { label: '3. Organik', badge: 'bg-green-50 text-green-700 border-green-200', bar: 'bg-green-600', hex: '#16A34A' },
+      B3: { label: '4. B3', badge: 'bg-red-50 text-red-700 border-red-200', bar: 'bg-red-600', hex: '#DC2626' }
+    };
+
+    const ROLE_LABELS = {
+      admin: 'Admin Sistem',
+      teller: 'Teller',
+      kepala_kreasi: 'Kepala Kreasi 85',
+      pembina: 'Pembina (Kepsek)',
+      guru_kelas: 'Guru Kelas'
+    };
+
+    // =========================================================================
+    // 4. LOGO RESMI KREASI 85 (./logo.jpg DENGAN FALLBACK ./Kreasi85_2.jpg)
+    // =========================================================================
+    function getActiveLogoSrc() {
+      return localStorage.getItem('k85_custom_logo') || './logo.jpg';
+    }
+
+    function renderAllLogos() {
+      const logoSrc = getActiveLogoSrc();
+      const containers = [
+        { id: 'login-logo-render', cls: 'w-full h-full object-contain rounded-xl' },
+        { id: 'sidebar-logo-render', cls: 'w-full h-full object-contain rounded-lg' },
+        { id: 'mobile-logo-render', cls: 'w-full h-full object-contain rounded-md' }
+      ];
+      containers.forEach(({ id, cls }) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = `<img src="${logoSrc}" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" class="${cls}" />`;
+      });
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Ukuran gambar maksimal 2MB.', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        localStorage.setItem('k85_custom_logo', e.target.result);
+        renderAllLogos();
+        showToast('Logo kustom berhasil dipasang pada aplikasi!', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // =========================================================================
+    // 5. UTILITAS FORMAT ANGKA, TANGGAL, MODAL & TOAST
+    // =========================================================================
+    function formatKg(val) {
+      const num = Number(val) || 0;
+      return `${num.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} Kg`;
+    }
+
+    function formatGram(val) {
+      const num = Number(val) || 0;
+      return `${num.toLocaleString('id-ID', { maximumFractionDigits: 2 })} gram`;
+    }
+
+    function formatDateTimeID(isoStr) {
+      if (!isoStr) return '-';
+      const d = new Date(isoStr);
+      return d.toLocaleString('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function getLocalDateTimeInputString(date = new Date()) {
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    window.showToast = function(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const colors = {
+        success: 'bg-emerald-900 text-white border-emerald-700',
+        error: 'bg-red-900 text-white border-red-700',
+        info: 'bg-slate-900 text-white border-slate-700'
+      };
+      const el = document.createElement('div');
+      el.className = `pointer-events-auto px-4 py-3 rounded-xl border shadow-lg text-xs font-medium flex items-center justify-between gap-3 transition-all duration-300 ${colors[type] || colors.info}`;
+      el.innerHTML = `<span>${message}</span><button type="button" onclick="this.parentElement.remove()" class="text-white/70 hover:text-white font-bold">&times;</button>`;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 4500);
+    };
+
+    window.openModal = function(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (id === 'modal-supabase-config') {
+        document.getElementById('cfg-supabase-url').value = localStorage.getItem('k85_supabase_url') || (SUPABASE_URL.includes('YOUR_PROJECT_ID') ? '' : SUPABASE_URL);
+        document.getElementById('cfg-supabase-key').value = localStorage.getItem('k85_supabase_key') || (SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY') ? '' : SUPABASE_ANON_KEY);
+      } else if (id === 'modal-sql-guide') {
+        document.getElementById('sql-script-content').textContent = SQL_SETUP_SCRIPT;
+      }
+      el.classList.remove('hidden');
+      lucide.createIcons({ nodes: [el] });
+    };
+
+    window.closeModal = function(id) {
+      document.getElementById(id)?.classList.add('hidden');
+    };
+
+    window.copySqlScript = function() {
+      const ta = document.createElement('textarea');
+      ta.value = SQL_SETUP_SCRIPT;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Skrip SQL Supabase berhasil disalin ke clipboard!', 'success');
+    };
+
+    // Simpan Pengaturan Supabase
+    document.getElementById('form-supabase-config').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const url = document.getElementById('cfg-supabase-url').value.trim();
+      const key = document.getElementById('cfg-supabase-key').value.trim();
+      localStorage.setItem('k85_supabase_url', url);
+      localStorage.setItem('k85_supabase_key', key);
+      if (initSupabaseClient(url, key)) {
+        showToast('Koneksi database Supabase berhasil disimpan!', 'success');
+        closeModal('modal-supabase-config');
+      } else {
+        showToast('Periksa kembali format URL dan Anon Key Supabase.', 'error');
+      }
+    });
+
+    // =========================================================================
+    // 6. AUTENTIKASI 5 ROLE & SETUP ADMIN PERTAMA KALI
+    // =========================================================================
+    window.openFirstAdminSetup = async function() {
+      if (!isDbConfigured) {
+        showToast('Silakan atur koneksi database Supabase terlebih dahulu.', 'error');
+        openModal('modal-supabase-config');
+        return;
+      }
+      try {
+        const { count, error } = await supabase.from('pengurus').select('*', { count: 'exact', head: true });
+        if (error) throw error;
+        if ((count || 0) > 0) {
+          showToast('Akun pengurus sudah terdaftar. Silakan login menggunakan akun Admin yang ada.', 'info');
+          return;
+        }
+        openModal('modal-first-admin');
+      } catch (err) {
+        showToast('Gagal memeriksa tabel pengurus. Pastikan Skrip SQL sudah dijalankan: ' + err.message, 'error');
+      }
+    };
+
+    document.getElementById('form-first-admin').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!isDbConfigured) return;
+
+      const payload = {
+        nama_lengkap: document.getElementById('first-admin-nama').value.trim(),
+        nip: document.getElementById('first-admin-nip').value.trim() || null,
+        role: 'admin',
+        email_username: document.getElementById('first-admin-user').value.trim(),
+        password_pin: document.getElementById('first-admin-pass').value.trim(),
+        is_active: true
+      };
+
+      try {
+        const { count } = await supabase.from('pengurus').select('*', { count: 'exact', head: true });
+        if ((count || 0) > 0) {
+          showToast('Setup Admin pertama sudah pernah dilakukan.', 'error');
+          closeModal('modal-first-admin');
+          return;
+        }
+        const { error } = await supabase.from('pengurus').insert([payload]);
+        if (error) throw error;
+
+        showToast('Akun Admin utama berhasil dibuat! Silakan masuk.', 'success');
+        closeModal('modal-first-admin');
+        document.getElementById('login-username').value = payload.email_username;
+      } catch (err) {
+        showToast('Gagal membuat Admin pertama: ' + err.message, 'error');
+      }
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!isDbConfigured) {
+        showToast('Hubungkan database Supabase terlebih dahulu lewat tombol "Atur DB".', 'error');
+        openModal('modal-supabase-config');
+        return;
+      }
+
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const btn = document.getElementById('btn-login-submit');
+      btn.disabled = true;
+
+      try {
+        // 1. Cek ke tabel pengurus (Admin, Teller, Kepala Kreasi 85, Pembina/Kepsek)
+        const { data: pengurusData, error: errP } = await supabase
+          .from('pengurus')
+          .select('*')
+          .eq('email_username', username)
+          .eq('password_pin', password)
+          .maybeSingle();
+
+        if (errP) throw errP;
+
+        if (pengurusData) {
+          if (!pengurusData.is_active) {
+            showToast('Akun pengurus ini sedang dinonaktifkan oleh Admin.', 'error');
+            return;
+          }
+          loginSuccess({
+            id: pengurusData.id,
+            nama: pengurusData.nama_lengkap,
+            nip: pengurusData.nip,
+            role: pengurusData.role,
+            username: pengurusData.email_username
+          });
+          return;
+        }
+
+        // 2. Cek ke tabel nasabah_kelas (Guru Kelas)
+        const { data: nasabahData, error: errN } = await supabase
+          .from('nasabah_kelas')
+          .select('*')
+          .eq('email_username', username)
+          .eq('password_pin', password)
+          .maybeSingle();
+
+        if (errN) throw errN;
+
+        if (nasabahData) {
+          if (!nasabahData.is_active) {
+            showToast('Akun kelas ini sedang dinonaktifkan.', 'error');
+            return;
+          }
+          loginSuccess({
+            id: nasabahData.id,
+            kelas_id: nasabahData.id,
+            nama: nasabahData.nama_guru_kelas,
+            nama_kelas: nasabahData.nama_kelas,
+            nip: nasabahData.nip_guru,
+            role: 'guru_kelas',
+            username: nasabahData.email_username
+          });
+          return;
+        }
+
+        showToast('Username/Email atau Kata Sandi tidak ditemukan.', 'error');
+      } catch (err) {
+        showToast('Gagal login: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    async function loginSuccess(userObj) {
+      state.currentUser = userObj;
+      sessionStorage.setItem('k85_session', JSON.stringify(userObj));
+
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('app-shell').classList.remove('hidden');
+
+      const roleText = ROLE_LABELS[userObj.role] || userObj.role;
+      document.getElementById('sidebar-role-badge').textContent = roleText;
+      document.getElementById('mobile-role-badge').textContent = roleText;
+      document.getElementById('sidebar-user-name').textContent = userObj.nama;
+      document.getElementById('sidebar-user-sub').textContent = userObj.role === 'guru_kelas' ? `Wali Kelas ${userObj.nama_kelas}` : userObj.username;
+      document.getElementById('mobile-user-subtitle').textContent = userObj.role === 'guru_kelas' ? `Kelas ${userObj.nama_kelas} • ${userObj.nama}` : userObj.nama;
+
+      setupRoleNavigation();
+      await refreshAllData();
+
+      // Arahkan Teller langsung ke form transaksi baru atau dasbor
+      const defaultMenu = userObj.role === 'teller' ? 'transaksi-baru' : 'dashboard';
+      switchView(defaultMenu);
+    }
+
+    window.handleLogout = function() {
+      state.currentUser = null;
+      sessionStorage.removeItem('k85_session');
+      document.getElementById('app-shell').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
+      document.getElementById('login-password').value = '';
+      showToast('Anda telah keluar dari aplikasi.', 'info');
+    };
+
+    // =========================================================================
+    // 7. NAVIGASI ADAPTIF 5 ROLE (DESKTOP SIDEBAR & MOBILE BOTTOM BAR)
+    // =========================================================================
+    function getMenusForRole(role) {
+      const allMenus = [
+        { id: 'dashboard', label: role === 'guru_kelas' ? 'Dasbor Kelas' : 'Dasbor Utama', icon: 'layout-dashboard', roles: ['admin', 'teller', 'kepala_kreasi', 'pembina', 'guru_kelas'] },
+        { id: 'transaksi-baru', label: 'Transaksi Baru', icon: 'plus-circle', roles: ['admin', 'teller'] },
+        { id: 'riwayat', label: 'Riwayat Setoran', icon: 'history', roles: ['admin', 'teller', 'kepala_kreasi', 'pembina', 'guru_kelas'] },
+        { id: 'pengurus', label: 'Data Pengurus', icon: 'shield-check', roles: ['admin'] },
+        { id: 'nasabah', label: 'Data Nasabah', icon: 'users', roles: ['admin', 'kepala_kreasi'] }
+      ];
+      return allMenus.filter(m => m.roles.includes(role));
+    }
+
+    function setupRoleNavigation() {
+      const menus = getMenusForRole(state.currentUser.role);
+      const desktopNav = document.getElementById('desktop-nav');
+      const mobileNav = document.getElementById('mobile-bottom-nav');
+
+      desktopNav.innerHTML = menus.map(m => `
+        <button type="button" data-nav-id="${m.id}" onclick="switchView('${m.id}')"
+          class="nav-btn-desktop w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+          <i data-lucide="${m.icon}" class="w-4 h-4 shrink-0"></i>
+          <span class="truncate">${m.label}</span>
+        </button>
+      `).join('');
+
+      mobileNav.innerHTML = menus.map(m => `
+        <button type="button" data-nav-id="${m.id}" onclick="switchView('${m.id}')"
+          class="nav-btn-mobile flex-1 flex flex-col items-center justify-center gap-1 py-1 text-[10px] font-semibold text-slate-500 transition cursor-pointer">
+          <i data-lucide="${m.icon}" class="w-5 h-5"></i>
+          <span class="truncate max-w-[72px]">${m.label}</span>
+        </button>
+      `).join('');
+
+      lucide.createIcons({ nodes: [desktopNav, mobileNav] });
+    }
+
+    window.switchView = function(viewId) {
+      state.activeView = viewId;
+      const menus = getMenusForRole(state.currentUser.role);
+      const activeMenu = menus.find(m => m.id === viewId) || menus[0];
+      if (!activeMenu) return;
+
+      ['dashboard', 'transaksi-baru', 'riwayat', 'pengurus', 'nasabah'].forEach(id => {
+        document.getElementById(`view-${id}`)?.classList.add('hidden');
+      });
+      document.getElementById(`view-${activeMenu.id}`)?.classList.remove('hidden');
+      document.getElementById('page-heading').textContent = activeMenu.label;
+
+      document.querySelectorAll('.nav-btn-desktop').forEach(btn => {
+        const isAct = btn.dataset.navId === activeMenu.id;
+        btn.className = isAct
+          ? 'nav-btn-desktop w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/70 transition cursor-pointer'
+          : 'nav-btn-desktop w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer';
+      });
+
+      document.querySelectorAll('.nav-btn-mobile').forEach(btn => {
+        const isAct = btn.dataset.navId === activeMenu.id;
+        btn.className = isAct
+          ? 'nav-btn-mobile flex-1 flex flex-col items-center justify-center gap-1 py-1 text-[10px] font-bold text-emerald-700 transition cursor-pointer'
+          : 'nav-btn-mobile flex-1 flex flex-col items-center justify-center gap-1 py-1 text-[10px] font-semibold text-slate-500 transition cursor-pointer';
+      });
+
+      if (activeMenu.id === 'transaksi-baru') initTransactionForm();
+      if (activeMenu.id === 'dashboard') renderDashboard();
+      if (activeMenu.id === 'riwayat') renderRiwayatTable();
+      if (activeMenu.id === 'pengurus') renderPengurusTable();
+      if (activeMenu.id === 'nasabah') renderNasabahTable();
+    };
+
+    // =========================================================================
+    // 8. SINKRONISASI DATA REAL-TIME DARI SUPABASE
+    // =========================================================================
+    window.refreshAllData = async function() {
+      if (!isDbConfigured || !state.currentUser) return;
+      const btn = document.getElementById('btn-refresh-data');
+      if (btn) btn.classList.add('opacity-60');
+
+      try {
+        const [resPengurus, resNasabah, resNota, resDetail] = await Promise.all([
+          supabase.from('pengurus').select('*').order('nama_lengkap', { ascending: true }),
+          supabase.from('nasabah_kelas').select('*').order('nama_kelas', { ascending: true }),
+          supabase.from('transaksi_nota').select('*').order('tanggal_setor', { ascending: false }),
+          supabase.from('transaksi_detail').select('*')
+        ]);
+
+        if (resPengurus.error) throw resPengurus.error;
+        if (resNasabah.error) throw resNasabah.error;
+        if (resNota.error) throw resNota.error;
+        if (resDetail.error) throw resDetail.error;
+
+        state.pengurusList = resPengurus.data || [];
+        state.nasabahList = resNasabah.data || [];
+
+        const nasabahMap = new Map(state.nasabahList.map(n => [n.id, n]));
+        const detailsByNota = new Map();
+        (resDetail.data || []).forEach(d => {
+          if (!detailsByNota.has(d.nota_id)) detailsByNota.set(d.nota_id, []);
+          detailsByNota.get(d.nota_id).push(d);
+        });
+
+        state.transaksiList = (resNota.data || []).map(nota => ({
+          ...nota,
+          nasabah: nasabahMap.get(nota.nasabah_id) || { nama_kelas: '-', nama_guru_kelas: '-' },
+          details: detailsByNota.get(nota.id) || []
+        }));
+
+        populateKelasDropdowns();
+        renderDashboard();
+        renderRiwayatTable();
+        renderPengurusTable();
+        renderNasabahTable();
+      } catch (err) {
+        showToast('Gagal memuat data dari Supabase: ' + err.message, 'error');
+      } finally {
+        if (btn) btn.classList.remove('opacity-60');
+      }
+    };
+
+    function populateKelasDropdowns() {
+      const aktifKelas = state.nasabahList.filter(n => n.is_active);
+      const optionsAktif = `<option value="">-- Pilih Kelas --</option>` + aktifKelas.map(k =>
+        `<option value="${k.id}">Kelas ${k.nama_kelas} — ${k.nama_guru_kelas}</option>`
+      ).join('');
+
+      const optionsSemua = `<option value="all">Semua Kelas</option>` + state.nasabahList.map(k =>
+        `<option value="${k.id}">Kelas ${k.nama_kelas} (${k.nama_guru_kelas})</option>`
+      ).join('');
+
+      const trxSelect = document.getElementById('trx-nasabah-id');
+      if (trxSelect) trxSelect.innerHTML = optionsAktif;
+
+      const editSelect = document.getElementById('edit-trx-nasabah-id');
+      if (editSelect) editSelect.innerHTML = `<option value="">-- Pilih Kelas --</option>` + state.nasabahList.map(k =>
+        `<option value="${k.id}">Kelas ${k.nama_kelas} — ${k.nama_guru_kelas}</option>`
+      ).join('');
+
+      const dashFilter = document.getElementById('dash-filter-kelas');
+      if (dashFilter) dashFilter.innerHTML = optionsSemua;
+
+      const riwFilter = document.getElementById('riwayat-filter-kelas');
+      if (riwFilter) riwFilter.innerHTML = optionsSemua;
+    }
+
+    // =========================================================================
+    // 9. FORM INPUT TRANSAKSI MULTI-ITEM (GRAM -> KG OTOMATIS)
+    // =========================================================================
+    function generateNomorNota() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      const datePart = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+      const randPart = String(Math.floor(100 + Math.random() * 900));
+      return `K85-${datePart}-${randPart}`;
+    }
+
+    function initTransactionForm() {
+      document.getElementById('form-nota-number').textContent = generateNomorNota();
+      document.getElementById('trx-tanggal').value = getLocalDateTimeInputString();
+      document.getElementById('trx-nasabah-id').value = '';
+      document.getElementById('trx-guru-info').classList.add('hidden');
+
+      const container = document.getElementById('trx-items-container');
+      container.innerHTML = '';
+      addTransactionItemRow('Kertas');
+      recalcTransactionLive();
+    }
+
+    window.handleSelectNasabahTrx = function() {
+      const id = document.getElementById('trx-nasabah-id').value;
+      const infoBox = document.getElementById('trx-guru-info');
+      const nasabah = state.nasabahList.find(n => n.id === id);
+      if (!nasabah) {
+        infoBox.classList.add('hidden');
+        return;
+      }
+      document.getElementById('trx-guru-nama').textContent = `${nasabah.nama_guru_kelas} (Kelas ${nasabah.nama_kelas})`;
+      infoBox.classList.remove('hidden');
+    };
+
+    window.addTransactionItemRow = function(defaultJenis = '') {
+      const container = document.getElementById('trx-items-container');
+      if (container.children.length >= 4) {
+        showToast('Maksimal 4 jenis sampah dalam 1 nota transaksi.', 'info');
+        return;
+      }
+
+      const usedTypes = Array.from(container.querySelectorAll('.trx-item-jenis')).map(s => s.value);
+      const availableType = defaultJenis || ['Kertas', 'Plastik', 'Organik', 'B3'].find(t => !usedTypes.includes(t)) || 'Kertas';
+
+      const row = document.createElement('div');
+      row.className = 'trx-item-row p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3 relative';
+      row.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+          <div class="sm:col-span-5">
+            <label class="block text-[11px] font-bold uppercase text-slate-600 mb-1">Jenis Sampah</label>
+            <select class="trx-item-jenis w-full h-11 px-3 bg-white border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500">
+              <option value="Kertas" ${availableType === 'Kertas' ? 'selected' : ''}>1. Kertas</option>
+              <option value="Plastik" ${availableType === 'Plastik' ? 'selected' : ''}>2. Plastik</option>
+              <option value="Organik" ${availableType === 'Organik' ? 'selected' : ''}>3. Organik</option>
+              <option value="B3" ${availableType === 'B3' ? 'selected' : ''}>4. B3</option>
+            </select>
+          </div>
+
+          <div class="sm:col-span-4">
+            <label class="block text-[11px] font-bold uppercase text-slate-600 mb-1">Berat (Gram) *</label>
+            <input type="number" step="any" min="0.1" required placeholder="Contoh: 1500"
+              oninput="recalcTransactionLive()"
+              class="trx-item-gram w-full h-11 px-3 bg-white border border-slate-300 rounded-xl text-base font-extrabold tabular-nums focus:ring-2 focus:ring-emerald-500" />
+          </div>
+
+          <div class="sm:col-span-3">
+            <label class="block text-[11px] font-bold uppercase text-emerald-700 mb-1">Konversi (Kg)</label>
+            <div class="trx-item-kg-display h-11 px-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold text-sm flex items-center justify-end tabular-nums">
+              0,000 Kg
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="text" placeholder="Catatan kondisi sampah (opsional)..."
+            class="trx-item-ket flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs" />
+          <button type="button" onclick="removeTransactionItemRow(this)" title="Hapus Baris"
+            class="p-2 rounded-lg text-red-500 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `;
+      container.appendChild(row);
+      lucide.createIcons({ nodes: [row] });
+      updateAddButtonState();
+    };
+
+    window.removeTransactionItemRow = function(btn) {
+      const container = document.getElementById('trx-items-container');
+      if (container.children.length <= 1) {
+        showToast('Minimal harus terdapat 1 jenis sampah dalam nota.', 'info');
+        return;
+      }
+      btn.closest('.trx-item-row').remove();
+      recalcTransactionLive();
+      updateAddButtonState();
+    };
+
+    function updateAddButtonState() {
+      const count = document.getElementById('trx-items-container').children.length;
+      const btn = document.getElementById('btn-add-trx-item');
+      if (btn) btn.classList.toggle('hidden', count >= 4);
+    }
+
+    window.recalcTransactionLive = function() {
+      let totalGram = 0;
+      document.querySelectorAll('#trx-items-container .trx-item-row').forEach(row => {
+        const gram = parseFloat(row.querySelector('.trx-item-gram').value) || 0;
+        const kg = gram / 1000;
+        totalGram += gram;
+        row.querySelector('.trx-item-kg-display').textContent = formatKg(kg);
+      });
+      document.getElementById('trx-live-total-gram').textContent = formatGram(totalGram);
+      document.getElementById('trx-live-total-kg').textContent = formatKg(totalGram / 1000);
+    };
+
+    document.getElementById('form-transaksi').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nasabahId = document.getElementById('trx-nasabah-id').value;
+      const tanggalVal = document.getElementById('trx-tanggal').value;
+      const nomorNota = document.getElementById('form-nota-number').textContent.trim();
+
+      if (!nasabahId) {
+        showToast('Silakan pilih kelas nasabah terlebih dahulu.', 'error');
+        return;
+      }
+
+      const rows = Array.from(document.querySelectorAll('#trx-items-container .trx-item-row'));
+      const items = [];
+      const seenJenis = new Set();
+
+      for (const row of rows) {
+        const jenis = row.querySelector('.trx-item-jenis').value;
+        const gram = parseFloat(row.querySelector('.trx-item-gram').value);
+        const ket = row.querySelector('.trx-item-ket').value.trim();
+
+        if (!gram || gram <= 0) {
+          showToast(`Masukkan berat (gram) yang valid untuk kategori ${jenis}.`, 'error');
+          return;
+        }
+        if (seenJenis.has(jenis)) {
+          showToast(`Jenis sampah ${jenis} dipilih lebih dari sekali. Gabungkan beratnya dalam 1 baris.`, 'error');
+          return;
+        }
+        seenJenis.add(jenis);
+        items.push({
+          jenis_sampah: jenis,
+          berat_gram: gram,
+          berat_kg: Number((gram / 1000).toFixed(4)),
+          keterangan: ket || null
+        });
+      }
+
+      const totalGram = items.reduce((sum, i) => sum + i.berat_gram, 0);
+      const totalKg = Number((totalGram / 1000).toFixed(4));
+      const btn = document.getElementById('btn-submit-transaksi');
+      btn.disabled = true;
+
+      try {
+        const { data: insertedNota, error: errNota } = await supabase
+          .from('transaksi_nota')
+          .insert([{
+            nomor_nota: nomorNota,
+            tanggal_setor: new Date(tanggalVal).toISOString(),
+            nasabah_id: nasabahId,
+            teller_id: state.currentUser.id,
+            teller_nama: state.currentUser.nama,
+            total_berat_gram: totalGram,
+            total_berat_kg: totalKg
+          }])
+          .select()
+          .single();
+
+        if (errNota) throw errNota;
+
+        const detailRows = items.map(i => ({ ...i, nota_id: insertedNota.id }));
+        const { error: errDetail } = await supabase.from('transaksi_detail').insert(detailRows);
+        if (errDetail) throw errDetail;
+
+        showToast(`Transaksi ${nomorNota} berhasil disimpan!`, 'success');
+        await refreshAllData();
+        initTransactionForm();
+        openStrukModal(insertedNota.id);
+      } catch (err) {
+        showToast('Gagal menyimpan transaksi: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // =========================================================================
+    // 10. DASBOR LAPORAN & VISUALISASI KOMPOSISI
+    // =========================================================================
+    window.handleDashPeriodChange = function() {
+      const val = document.getElementById('dash-filter-period').value;
+      document.getElementById('dash-custom-dates').classList.toggle('hidden', val !== 'custom');
+      renderDashboard();
+    };
+
+    function getFilteredTransactionsForDashboard() {
+      const period = document.getElementById('dash-filter-period')?.value || 'all';
+      const kelasFilter = document.getElementById('dash-filter-kelas')?.value || 'all';
+      const isGuru = state.currentUser?.role === 'guru_kelas';
+
+      const now = new Date();
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const customStart = document.getElementById('dash-date-start')?.value;
+      const customEnd = document.getElementById('dash-date-end')?.value;
+
+      return state.transaksiList.filter(nota => {
+        if (isGuru && nota.nasabah_id !== state.currentUser.kelas_id) return false;
+        if (!isGuru && kelasFilter !== 'all' && nota.nasabah_id !== kelasFilter) return false;
+
+        const tgl = new Date(nota.tanggal_setor);
+        if (period === 'today' && tgl < startOfToday) return false;
+        if (period === 'month' && tgl < startOfMonth) return false;
+        if (period === 'custom') {
+          if (customStart && tgl < new Date(customStart + 'T00:00:00')) return false;
+          if (customEnd && tgl > new Date(customEnd + 'T23:59:59')) return false;
+        }
+        return true;
+      });
+    }
+
+    window.renderDashboard = function() {
+      if (!state.currentUser) return;
+      const isGuru = state.currentUser.role === 'guru_kelas';
+
+      document.getElementById('dash-filter-kelas-wrap')?.classList.toggle('hidden', isGuru);
+      document.getElementById('riwayat-kelas-filter-wrap')?.classList.toggle('hidden', isGuru);
+      document.getElementById('dash-hero-label').textContent = isGuru
+        ? `Total Setoran Kelas ${state.currentUser.nama_kelas}`
+        : 'Akumulasi Total Sampah Terkumpul';
+
+      const filtered = getFilteredTransactionsForDashboard();
+      const sumsGram = { Kertas: 0, Plastik: 0, Organik: 0, B3: 0 };
+
+      filtered.forEach(nota => {
+        (nota.details || []).forEach(d => {
+          if (sumsGram[d.jenis_sampah] !== undefined) {
+            sumsGram[d.jenis_sampah] += Number(d.berat_gram) || 0;
+          }
+        });
+      });
+
+      const totalGram = Object.values(sumsGram).reduce((a, b) => a + b, 0);
+      const totalKg = totalGram / 1000;
+
+      document.getElementById('kpi-total-kg').textContent = formatKg(totalKg);
+      document.getElementById('kpi-total-gram').textContent = `(${formatGram(totalGram)})`;
+      document.getElementById('kpi-total-nota').textContent = `Berdasarkan ${filtered.length} nota penyetoran tercatat`;
+
+      ['Kertas', 'Plastik', 'Organik', 'B3'].forEach(kat => {
+        const key = kat.toLowerCase();
+        const g = sumsGram[kat];
+        document.getElementById(`kpi-${key}-kg`).textContent = formatKg(g / 1000);
+        document.getElementById(`kpi-${key}-gram`).textContent = formatGram(g);
+      });
+
+      // Update Visualisasi Grafik Komposisi
+      const stackedBar = document.getElementById('composition-stacked-bar');
+      const barsList = document.getElementById('composition-bars-list');
+
+      if (totalGram <= 0) {
+        stackedBar.innerHTML = `<div class="h-full bg-slate-200 w-full"></div>`;
+        barsList.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Belum ada data berat sampah pada periode yang dipilih.</p>`;
+      } else {
+        stackedBar.innerHTML = ['Kertas', 'Plastik', 'Organik', 'B3'].map(kat => {
+          const pct = (sumsGram[kat] / totalGram) * 100;
+          if (pct <= 0) return '';
+          return `<div style="width: ${pct.toFixed(2)}%" class="h-full ${KATEGORI_CONFIG[kat].bar} transition-all duration-500" title="${kat}: ${pct.toFixed(1)}%"></div>`;
+        }).join('');
+
+        barsList.innerHTML = ['Kertas', 'Plastik', 'Organik', 'B3'].map(kat => {
+          const g = sumsGram[kat];
+          const pct = totalGram > 0 ? ((g / totalGram) * 100).toFixed(1) : '0.0';
+          const cfg = KATEGORI_CONFIG[kat];
+          return `
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="font-semibold text-slate-700">${cfg.label}</span>
+                <span class="font-bold tabular-nums text-slate-900">${formatKg(g / 1000)} <span class="text-slate-400 font-normal">(${pct}%)</span></span>
+              </div>
+              <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div style="width: ${pct}%" class="h-full ${cfg.bar} rounded-full transition-all duration-500"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Rekap Per Kelas (khusus role sekolah: Admin, Teller, Kepala Kreasi 85, Pembina)
+      const rekapCard = document.getElementById('dash-rekap-kelas-card');
+      const rekapTbody = document.getElementById('dash-rekap-kelas-tbody');
+      if (rekapCard && rekapTbody) {
+        rekapCard.classList.toggle('hidden', isGuru);
+        if (!isGuru) {
+          if (state.nasabahList.length === 0) {
+            rekapTbody.innerHTML = `<tr><td colspan="6" class="py-6 px-4 text-center text-slate-500">Belum ada data kelas terdaftar.</td></tr>`;
+          } else {
+            rekapTbody.innerHTML = state.nasabahList.map(kls => {
+              const kSums = { Kertas: 0, Plastik: 0, Organik: 0, B3: 0 };
+              filtered.filter(n => n.nasabah_id === kls.id).forEach(n => {
+                (n.details || []).forEach(d => {
+                  if (kSums[d.jenis_sampah] !== undefined) kSums[d.jenis_sampah] += Number(d.berat_gram) || 0;
+                });
+              });
+              const kTotalGram = Object.values(kSums).reduce((a, b) => a + b, 0);
+              return `
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-4">
+                    <span class="font-bold text-slate-900">Kelas ${kls.nama_kelas}</span>
+                    <span class="block text-[11px] text-slate-500">${kls.nama_guru_kelas}</span>
+                  </td>
+                  <td class="py-3 px-4 text-right font-medium text-slate-700">${formatKg(kSums.Kertas / 1000)}</td>
+                  <td class="py-3 px-4 text-right font-medium text-slate-700">${formatKg(kSums.Plastik / 1000)}</td>
+                  <td class="py-3 px-4 text-right font-medium text-slate-700">${formatKg(kSums.Organik / 1000)}</td>
+                  <td class="py-3 px-4 text-right font-medium text-slate-700">${formatKg(kSums.B3 / 1000)}</td>
+                  <td class="py-3 px-4 text-right font-extrabold text-emerald-700">${formatKg(kTotalGram / 1000)}</td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
+      }
+    };
+
+    // =========================================================================
+    // 11. RIWAYAT TRANSAKSI, TOMBOL EDIT & STRUK CETAK
+    // =========================================================================
+    window.renderRiwayatTable = function() {
+      const tbody = document.getElementById('riwayat-tbody');
+      const emptyBox = document.getElementById('riwayat-empty');
+      if (!tbody) return;
+
+      const q = (document.getElementById('riwayat-search')?.value || '').toLowerCase();
+      const kelasFilter = document.getElementById('riwayat-filter-kelas')?.value || 'all';
+      const jenisFilter = document.getElementById('riwayat-filter-jenis')?.value || 'all';
+      const isGuru = state.currentUser?.role === 'guru_kelas';
+      const canEdit = ['admin', 'kepala_kreasi'].includes(state.currentUser?.role);
+
+      const list = state.transaksiList.filter(nota => {
+        if (isGuru && nota.nasabah_id !== state.currentUser.kelas_id) return false;
+        if (!isGuru && kelasFilter !== 'all' && nota.nasabah_id !== kelasFilter) return false;
+        if (jenisFilter !== 'all' && !(nota.details || []).some(d => d.jenis_sampah === jenisFilter)) return false;
+
+        if (q) {
+          const hay = `${nota.nomor_nota} ${nota.nasabah?.nama_kelas} ${nota.nasabah?.nama_guru_kelas}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      if (list.length === 0) {
+        tbody.innerHTML = '';
+        emptyBox.classList.remove('hidden');
+        return;
+      }
+
+      emptyBox.classList.add('hidden');
+      tbody.innerHTML = list.map(nota => {
+        const badges = (nota.details || []).map(d => {
+          const cfg = KATEGORI_CONFIG[d.jenis_sampah] || KATEGORI_CONFIG.Kertas;
+          return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${cfg.badge} tabular-nums">
+            ${d.jenis_sampah}: ${formatKg(d.berat_kg)}
+          </span>`;
+        }).join(' ');
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-3.5 px-4 align-top">
+              <p class="font-mono text-xs font-bold text-slate-900">${nota.nomor_nota}</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">${formatDateTimeID(nota.tanggal_setor)}</p>
+            </td>
+            <td class="py-3.5 px-4 align-top">
+              <span class="inline-block px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 font-bold text-xs mb-0.5">Kelas ${nota.nasabah?.nama_kelas}</span>
+              <p class="text-xs text-slate-600">${nota.nasabah?.nama_guru_kelas}</p>
+            </td>
+            <td class="py-3.5 px-4 align-top">
+              <div class="flex flex-wrap gap-1.5">${badges}</div>
+            </td>
+            <td class="py-3.5 px-4 align-top text-right tabular-nums">
+              <p class="font-display font-extrabold text-sm text-slate-900">${formatKg(nota.total_berat_kg)}</p>
+              <p class="text-[11px] text-slate-400">${formatGram(nota.total_berat_gram)}</p>
+            </td>
+            <td class="py-3.5 px-4 align-top text-xs text-slate-600">
+              ${nota.teller_nama || '-'}
+            </td>
+            <td class="py-3.5 px-4 align-top text-center">
+              <div class="inline-flex items-center gap-1.5">
+                <button type="button" onclick="openStrukModal('${nota.id}')" title="Lihat & Cetak Struk"
+                  class="py-1.5 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold inline-flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="receipt" class="w-3.5 h-3.5"></i>
+                  <span>Struk</span>
+                </button>
+                ${canEdit ? `
+                  <button type="button" onclick="openEditTransaksiModal('${nota.id}')" title="Edit Transaksi"
+                    class="py-1.5 px-2.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs font-semibold inline-flex items-center gap-1 cursor-pointer">
+                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                    <span>Edit</span>
+                  </button>
+                  <button type="button" onclick="deleteTransaksi('${nota.id}', '${nota.nomor_nota}')" title="Hapus Nota"
+                    class="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 cursor-pointer">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
+                ` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      lucide.createIcons({ nodes: [tbody] });
+    };
+
+    // Edit Transaksi (Admin & Kepala Kreasi 85)
+    window.openEditTransaksiModal = function(notaId) {
+      const nota = state.transaksiList.find(n => n.id === notaId);
+      if (!nota) return;
+
+      document.getElementById('edit-trx-id').value = nota.id;
+      document.getElementById('edit-nota-subtitle').textContent = nota.nomor_nota;
+      document.getElementById('edit-trx-nasabah-id').value = nota.nasabah_id;
+      document.getElementById('edit-trx-tanggal').value = getLocalDateTimeInputString(new Date(nota.tanggal_setor));
+
+      const container = document.getElementById('edit-trx-items-container');
+      container.innerHTML = '';
+      (nota.details || []).forEach(d => {
+        addEditTransactionItemRow(d.jenis_sampah, d.berat_gram, d.keterangan || '');
+      });
+      recalcEditTransactionLive();
+      openModal('modal-edit-transaksi');
+    };
+
+    window.addEditTransactionItemRow = function(jenis = 'Kertas', gram = '', ket = '') {
+      const container = document.getElementById('edit-trx-items-container');
+      if (container.children.length >= 4) {
+        showToast('Maksimal 4 jenis sampah dalam satu nota.', 'info');
+        return;
+      }
+      const row = document.createElement('div');
+      row.className = 'edit-trx-row p-3 rounded-xl border border-slate-200 bg-slate-50 grid grid-cols-12 gap-2 items-center';
+      row.innerHTML = `
+        <div class="col-span-4">
+          <select class="edit-item-jenis w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold">
+            <option value="Kertas" ${jenis === 'Kertas' ? 'selected' : ''}>1. Kertas</option>
+            <option value="Plastik" ${jenis === 'Plastik' ? 'selected' : ''}>2. Plastik</option>
+            <option value="Organik" ${jenis === 'Organik' ? 'selected' : ''}>3. Organik</option>
+            <option value="B3" ${jenis === 'B3' ? 'selected' : ''}>4. B3</option>
+          </select>
+        </div>
+        <div class="col-span-4">
+          <input type="number" step="any" min="0.1" required value="${gram}" placeholder="Gram"
+            oninput="recalcEditTransactionLive()"
+            class="edit-item-gram w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold tabular-nums" />
+        </div>
+        <div class="col-span-3">
+          <input type="text" value="${ket}" placeholder="Catatan"
+            class="edit-item-ket w-full px-2.5 py-2 bg-white border border-slate-200 rounded-lg text-xs" />
+        </div>
+        <div class="col-span-1 text-right">
+          <button type="button" onclick="this.closest('.edit-trx-row').remove(); recalcEditTransactionLive();" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `;
+      container.appendChild(row);
+      lucide.createIcons({ nodes: [row] });
+    };
+
+    window.recalcEditTransactionLive = function() {
+      let totalGram = 0;
+      document.querySelectorAll('#edit-trx-items-container .edit-trx-row').forEach(r => {
+        totalGram += parseFloat(r.querySelector('.edit-item-gram').value) || 0;
+      });
+      document.getElementById('edit-trx-live-total').textContent = `${formatKg(totalGram / 1000)} (${formatGram(totalGram)})`;
+    };
+
+    document.getElementById('form-edit-transaksi').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const notaId = document.getElementById('edit-trx-id').value;
+      const nasabahId = document.getElementById('edit-trx-nasabah-id').value;
+      const tanggalVal = document.getElementById('edit-trx-tanggal').value;
+
+      const rows = Array.from(document.querySelectorAll('#edit-trx-items-container .edit-trx-row'));
+      if (rows.length === 0) {
+        showToast('Minimal harus ada 1 baris item sampah.', 'error');
+        return;
+      }
+
+      const items = [];
+      const seen = new Set();
+      for (const r of rows) {
+        const jenis = r.querySelector('.edit-item-jenis').value;
+        const gram = parseFloat(r.querySelector('.edit-item-gram').value);
+        const ket = r.querySelector('.edit-item-ket').value.trim();
+        if (!gram || gram <= 0) {
+          showToast('Berat (gram) harus lebih dari 0.', 'error');
+          return;
+        }
+        if (seen.has(jenis)) {
+          showToast(`Kategori ${jenis} duplikat pada nota ini.`, 'error');
+          return;
+        }
+        seen.add(jenis);
+        items.push({
+          nota_id: notaId,
+          jenis_sampah: jenis,
+          berat_gram: gram,
+          berat_kg: Number((gram / 1000).toFixed(4)),
+          keterangan: ket || null
+        });
+      }
+
+      const totalGram = items.reduce((s, i) => s + i.berat_gram, 0);
+      const totalKg = Number((totalGram / 1000).toFixed(4));
+
+      try {
+        const { error: upErr } = await supabase
+          .from('transaksi_nota')
+          .update({
+            nasabah_id: nasabahId,
+            tanggal_setor: new Date(tanggalVal).toISOString(),
+            total_berat_gram: totalGram,
+            total_berat_kg: totalKg,
+            updated_by: state.currentUser.nama,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', notaId);
+
+        if (upErr) throw upErr;
+
+        await supabase.from('transaksi_detail').delete().eq('nota_id', notaId);
+        const { error: insErr } = await supabase.from('transaksi_detail').insert(items);
+        if (insErr) throw insErr;
+
+        showToast('Nota transaksi berhasil diperbarui!', 'success');
+        closeModal('modal-edit-transaksi');
+        await refreshAllData();
+      } catch (err) {
+        showToast('Gagal mengedit nota: ' + err.message, 'error');
+      }
+    });
+
+    window.deleteTransaksi = async function(notaId, nomorNota) {
+      // Konfirmasi menggunakan toast aksi cepat (tanpa window.confirm)
+      const existingConfirm = document.getElementById('confirm-delete-bar');
+      if (existingConfirm) existingConfirm.remove();
+
+      const bar = document.createElement('div');
+      bar.id = 'confirm-delete-bar';
+      bar.className = 'fixed bottom-20 lg:bottom-6 right-4 left-4 sm:left-auto z-50 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-700 flex items-center justify-between gap-4 max-w-md';
+      bar.innerHTML = `
+        <div class="text-xs">
+          <p class="font-bold text-red-400">Hapus Nota ${nomorNota}?</p>
+          <p class="text-slate-300 mt-0.5">Data yang dihapus tidak dapat dikembalikan.</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="this.closest('#confirm-delete-bar').remove()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold">Batal</button>
+          <button type="button" id="btn-do-delete-nota" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-xs font-bold">Ya, Hapus</button>
+        </div>
+      `;
+      document.body.appendChild(bar);
+      document.getElementById('btn-do-delete-nota').onclick = async () => {
+        bar.remove();
+        const { error } = await supabase.from('transaksi_nota').delete().eq('id', notaId);
+        if (error) {
+          showToast('Gagal menghapus nota: ' + error.message, 'error');
+        } else {
+          showToast(`Nota ${nomorNota} berhasil dihapus.`, 'success');
+          await refreshAllData();
+        }
+      };
+    };
+
+    // =========================================================================
+    // 12. STRUK NOTA & CETAK LAPORAN RESMI BERTANDA TANGAN
+    // =========================================================================
+    window.openStrukModal = function(notaId) {
+      const nota = state.transaksiList.find(n => n.id === notaId);
+      if (!nota) return;
+      state.selectedStrukNota = nota;
+
+      const itemsHtml = (nota.details || []).map(d => `
+        <div class="flex items-center justify-between py-1.5 border-b border-dashed border-slate-200">
+          <div>
+            <span class="font-bold text-slate-800">${d.jenis_sampah}</span>
+            ${d.keterangan ? `<p class="text-[10px] text-slate-500">${d.keterangan}</p>` : ''}
+          </div>
+          <div class="text-right tabular-nums">
+            <span class="font-bold text-slate-900">${formatKg(d.berat_kg)}</span>
+            <p class="text-[10px] text-slate-500">${formatGram(d.berat_gram)}</p>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('struk-preview-box').innerHTML = `
+        <div class="text-center border-b border-slate-200 pb-2.5">
+          <img src="${getActiveLogoSrc()}" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" style="width:56px; height:56px; object-fit:contain; margin:0 auto 6px auto;" />
+          <p class="font-display font-extrabold text-sm text-emerald-800">BANK SAMPAH KREASI 85</p>
+          <p class="text-[10px] text-slate-500">Kelola dan Rekayasa Sampah Inovatif</p>
+          <p class="font-mono font-bold text-xs text-slate-800 mt-1.5">${nota.nomor_nota}</p>
+        </div>
+        <div class="space-y-1 text-[11px]">
+          <div class="flex justify-between"><span class="text-slate-500">Tanggal:</span><span class="font-semibold">${formatDateTimeID(nota.tanggal_setor)}</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Kelas:</span><span class="font-bold text-emerald-800">Kelas ${nota.nasabah?.nama_kelas}</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Guru Kelas:</span><span class="font-semibold">${nota.nasabah?.nama_guru_kelas}</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Teller:</span><span>${nota.teller_nama || '-'}</span></div>
+        </div>
+        <div class="pt-1">${itemsHtml}</div>
+        <div class="pt-1 flex items-center justify-between text-sm font-extrabold text-slate-900 tabular-nums">
+          <span>TOTAL BERAT</span>
+          <span>${formatKg(nota.total_berat_kg)} (${formatGram(nota.total_berat_gram)})</span>
+        </div>
+        <p class="text-center text-[10px] italic text-slate-500 pt-2">"Sampah Diolah, Kreativitas Bertambah."</p>
+      `;
+
+      openModal('modal-struk');
+    };
+
+    window.copyStrukWhatsApp = function() {
+      const nota = state.selectedStrukNota;
+      if (!nota) return;
+      const lines = [
+        `*BUKTI SETOR SAMPAH — KREASI 85*`,
+        `No. Nota: *${nota.nomor_nota}*`,
+        `Tanggal: ${formatDateTimeID(nota.tanggal_setor)}`,
+        `Kelas: *${nota.nasabah?.nama_kelas}* (${nota.nasabah?.nama_guru_kelas})`,
+        `--------------------------------`,
+        ...(nota.details || []).map(d => `• ${d.jenis_sampah}: *${formatKg(d.berat_kg)}* (${formatGram(d.berat_gram)})`),
+        `--------------------------------`,
+        `*TOTAL SETORAN: ${formatKg(nota.total_berat_kg)}*`,
+        `Petugas Teller: ${nota.teller_nama || '-'}`,
+        `_Sampah Diolah, Kreativitas Bertambah._`
+      ];
+      const ta = document.createElement('textarea');
+      ta.value = lines.join('\n');
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Teks bukti setor siap ditempel ke WhatsApp!', 'success');
+    };
+
+    window.printStrukNota = function() {
+      const box = document.getElementById('struk-preview-box').innerHTML;
+      const printArea = document.getElementById('print-area');
+      printArea.innerHTML = `<div style="max-width: 340px; margin: 0 auto; font-family: Inter, sans-serif; padding: 16px; border: 1px solid #cbd5e1;">${box}</div>`;
+      window.print();
+    };
+
+    window.printOfficialReport = function() {
+      const filtered = getFilteredTransactionsForDashboard();
+      const sumsGram = { Kertas: 0, Plastik: 0, Organik: 0, B3: 0 };
+      filtered.forEach(n => (n.details || []).forEach(d => {
+        if (sumsGram[d.jenis_sampah] !== undefined) sumsGram[d.jenis_sampah] += Number(d.berat_gram) || 0;
+      }));
+      const totalGram = Object.values(sumsGram).reduce((a, b) => a + b, 0);
+
+      const kepala = state.pengurusList.find(p => p.role === 'kepala_kreasi' && p.is_active) || { nama_lengkap: '........................................', nip: '........................' };
+      const pembina = state.pengurusList.find(p => p.role === 'pembina' && p.is_active) || { nama_lengkap: '........................................', nip: '........................' };
+      const todayStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      const rowsHtml = filtered.map((n, idx) => `
+        <tr>
+          <td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">${idx + 1}</td>
+          <td style="border:1px solid #cbd5e1; padding:6px;">${n.nomor_nota}<br><small>${formatDateTimeID(n.tanggal_setor)}</small></td>
+          <td style="border:1px solid #cbd5e1; padding:6px;"><strong>Kelas ${n.nasabah?.nama_kelas}</strong><br>${n.nasabah?.nama_guru_kelas}</td>
+          <td style="border:1px solid #cbd5e1; padding:6px;">${(n.details || []).map(d => `${d.jenis_sampah}: ${formatKg(d.berat_kg)}`).join(', ')}</td>
+          <td style="border:1px solid #cbd5e1; padding:6px; text-align:right; font-weight:bold;">${formatKg(n.total_berat_kg)}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('print-area').innerHTML = `
+        <div style="font-family: Inter, sans-serif; color: #0f172a; padding: 24px;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:16px; border-bottom: 3px double #065f46; padding-bottom: 12px; margin-bottom: 18px;">
+            <img src="${getActiveLogoSrc()}" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" style="width:74px; height:74px; object-fit:contain;" />
+            <div style="text-align:center;">
+              <h1 style="font-size: 18px; font-weight: 800; margin: 0; color: #065f46;">LAPORAN REKAPITULASI TRANSAKSI BANK SAMPAH SEKOLAH</h1>
+              <h2 style="font-size: 15px; font-weight: 700; margin: 4px 0 0 0;">KREASI 85 — KELOLA DAN REKAYASA SAMPAH INOVATIF</h2>
+              <p style="font-size: 11px; font-style: italic; margin: 4px 0 0 0; color: #475569;">"Sampah Diolah, Kreativitas Bertambah."</p>
+            </div>
+          </div>
+
+          <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:18px;">
+            <thead>
+              <tr style="background:#f1f5f9;">
+                <th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Kategori Sampah</th>
+                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Total Berat (Gram)</th>
+                <th style="border:1px solid #cbd5e1; padding:8px; text-align:right;">Total Berat (Kg)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${['Kertas', 'Plastik', 'Organik', 'B3'].map(k => `
+                <tr>
+                  <td style="border:1px solid #cbd5e1; padding:7px;">${KATEGORI_CONFIG[k].label}</td>
+                  <td style="border:1px solid #cbd5e1; padding:7px; text-align:right;">${formatGram(sumsGram[k])}</td>
+                  <td style="border:1px solid #cbd5e1; padding:7px; text-align:right; font-weight:600;">${formatKg(sumsGram[k] / 1000)}</td>
+                </tr>
+              `).join('')}
+              <tr style="background:#ecfdf5; font-weight:800;">
+                <td style="border:1px solid #cbd5e1; padding:8px;">TOTAL KESELURUHAN (${filtered.length} NOTA)</td>
+                <td style="border:1px solid #cbd5e1; padding:8px; text-align:right;">${formatGram(totalGram)}</td>
+                <td style="border:1px solid #cbd5e1; padding:8px; text-align:right;">${formatKg(totalGram / 1000)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 style="font-size:13px; font-weight:700; margin-bottom:8px;">Rincian Nota Penyetoran</h3>
+          <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:28px;">
+            <thead>
+              <tr style="background:#f8fafc;">
+                <th style="border:1px solid #cbd5e1; padding:6px;">No</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">No. Nota & Waktu</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Kelas & Wali Kelas</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:left;">Rincian Sampah</th>
+                <th style="border:1px solid #cbd5e1; padding:6px; text-align:right;">Total (Kg)</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml || '<tr><td colspan="5" style="border:1px solid #cbd5e1; padding:10px; text-align:center;">Tidak ada data transaksi.</td></tr>'}</tbody>
+          </table>
+
+          <table style="width:100%; font-size:12px; margin-top:24px; text-align:center;">
+            <tr>
+              <td style="width:50%; vertical-align:top;">
+                <p style="margin:0;">Mengetahui,</p>
+                <p style="margin:2px 0 56px 0; font-weight:700;">Pembina Kreasi 85 / Kepala Sekolah</p>
+                <p style="margin:0; font-weight:700; text-decoration:underline;">${pembina.nama_lengkap}</p>
+                <p style="margin:2px 0 0 0; font-size:11px;">NIP. ${pembina.nip || '-'}</p>
+              </td>
+              <td style="width:50%; vertical-align:top;">
+                <p style="margin:0;">Dicetak pada ${todayStr}</p>
+                <p style="margin:2px 0 56px 0; font-weight:700;">Kepala Kreasi 85</p>
+                <p style="margin:0; font-weight:700; text-decoration:underline;">${kepala.nama_lengkap}</p>
+                <p style="margin:2px 0 0 0; font-size:11px;">NIP. ${kepala.nip || '-'}</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      `;
+      window.print();
+    };
+
+    window.exportTransactionsExcel = function() {
+      if (state.transaksiList.length === 0) {
+        showToast('Belum ada data transaksi untuk diekspor.', 'info');
+        return;
+      }
+      const rows = [];
+      state.transaksiList.forEach(n => {
+        (n.details || []).forEach(d => {
+          rows.push({
+            Nomor_Nota: n.nomor_nota,
+            Tanggal_Setor: formatDateTimeID(n.tanggal_setor),
+            Kelas: n.nasabah?.nama_kelas || '-',
+            Guru_Kelas: n.nasabah?.nama_guru_kelas || '-',
+            Jenis_Sampah: d.jenis_sampah,
+            Berat_Gram: Number(d.berat_gram),
+            Berat_Kg: Number(d.berat_kg),
+            Keterangan: d.keterangan || '',
+            Teller: n.teller_nama || '-'
+          });
+        });
+      });
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Riwayat_Kreasi85');
+      XLSX.writeFile(wb, `Laporan_Kreasi85_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      showToast('File Excel riwayat transaksi berhasil diunduh!', 'success');
+    };
+
+    // =========================================================================
+    // 13. MODUL DATA PENGURUS (TAMBAH & EDIT)
+    // =========================================================================
+    function renderPengurusTable() {
+      const tbody = document.getElementById('pengurus-tbody');
+      const empty = document.getElementById('pengurus-empty');
+      if (!tbody) return;
+
+      if (state.pengurusList.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      tbody.innerHTML = state.pengurusList.map(p => `
+        <tr class="hover:bg-slate-50">
+          <td class="py-3.5 px-4 font-bold text-slate-900">${p.nama_lengkap}</td>
+          <td class="py-3.5 px-4 text-xs text-slate-600 tabular-nums">${p.nip || '-'}</td>
+          <td class="py-3.5 px-4">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              ${ROLE_LABELS[p.role] || p.role}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-xs font-mono text-slate-700">${p.email_username}</td>
+          <td class="py-3.5 px-4">
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${p.is_active ? 'bg-green-100 text-green-800' : 'bg-slate-200 text-slate-600'}">
+              ${p.is_active ? 'Aktif' : 'Nonaktif'}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-center">
+            <button type="button" onclick="openPengurusModal('${p.id}')"
+              class="py-1.5 px-3 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs font-semibold inline-flex items-center gap-1 cursor-pointer">
+              <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+              <span>Edit</span>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons({ nodes: [tbody] });
+    }
+
+    window.openPengurusModal = function(id = '') {
+      const form = document.getElementById('form-pengurus');
+      form.reset();
+      document.getElementById('pengurus-id').value = id;
+
+      if (id) {
+        const p = state.pengurusList.find(x => x.id === id);
+        if (!p) return;
+        document.getElementById('modal-pengurus-title').textContent = 'Edit Data Pengurus';
+        document.getElementById('pengurus-nama').value = p.nama_lengkap;
+        document.getElementById('pengurus-nip').value = p.nip || '';
+        document.getElementById('pengurus-role').value = p.role;
+        document.getElementById('pengurus-username').value = p.email_username;
+        document.getElementById('pengurus-password').value = p.password_pin;
+        document.getElementById('pengurus-active').checked = p.is_active;
+      } else {
+        document.getElementById('modal-pengurus-title').textContent = 'Tambah Pengurus Baru';
+        document.getElementById('pengurus-active').checked = true;
+      }
+      openModal('modal-pengurus');
+    };
+
+    document.getElementById('form-pengurus').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('pengurus-id').value;
+      const payload = {
+        nama_lengkap: document.getElementById('pengurus-nama').value.trim(),
+        nip: document.getElementById('pengurus-nip').value.trim() || null,
+        role: document.getElementById('pengurus-role').value,
+        email_username: document.getElementById('pengurus-username').value.trim(),
+        password_pin: document.getElementById('pengurus-password').value.trim(),
+        is_active: document.getElementById('pengurus-active').checked,
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = id
+        ? await supabase.from('pengurus').update(payload).eq('id', id)
+        : await supabase.from('pengurus').insert([payload]);
+
+      if (error) {
+        showToast('Gagal menyimpan pengurus: ' + error.message, 'error');
+        return;
+      }
+      showToast(id ? 'Data pengurus berhasil diperbarui!' : 'Pengurus baru berhasil ditambahkan!', 'success');
+      closeModal('modal-pengurus');
+      await refreshAllData();
+    });
+
+    // =========================================================================
+    // 14. MODUL DATA NASABAH (TAMBAH, EDIT, TEMPLATE, IMPOR & EKSPOR EXCEL)
+    // =========================================================================
+    function renderNasabahTable() {
+      const tbody = document.getElementById('nasabah-tbody');
+      const empty = document.getElementById('nasabah-empty');
+      if (!tbody) return;
+
+      const isAdmin = state.currentUser?.role === 'admin';
+      document.getElementById('nasabah-admin-actions')?.classList.toggle('hidden', !isAdmin);
+
+      const q = (document.getElementById('nasabah-search')?.value || '').toLowerCase();
+      const filtered = state.nasabahList.filter(n =>
+        `${n.nama_kelas} ${n.nama_guru_kelas} ${n.email_username}`.toLowerCase().includes(q)
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      tbody.innerHTML = filtered.map(n => `
+        <tr class="hover:bg-slate-50">
+          <td class="py-3.5 px-4">
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 font-bold text-xs border border-emerald-200">
+              ${n.nama_kelas}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 font-bold text-slate-900">${n.nama_guru_kelas}</td>
+          <td class="py-3.5 px-4 text-xs text-slate-600 tabular-nums">${n.nip_guru || '-'}</td>
+          <td class="py-3.5 px-4 text-xs font-mono text-slate-700">${n.email_username}</td>
+          <td class="py-3.5 px-4">
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${n.is_active ? 'bg-green-100 text-green-800' : 'bg-slate-200 text-slate-600'}">
+              ${n.is_active ? 'Aktif' : 'Nonaktif'}
+            </span>
+          </td>
+          <td class="py-3.5 px-4 text-center">
+            ${isAdmin ? `
+              <button type="button" onclick="openNasabahModal('${n.id}')"
+                class="py-1.5 px-3 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs font-semibold inline-flex items-center gap-1 cursor-pointer">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                <span>Edit</span>
+              </button>
+            ` : `<span class="text-xs text-slate-400">Baca Saja</span>`}
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons({ nodes: [tbody] });
+    }
+
+    window.openNasabahModal = function(id = '') {
+      const form = document.getElementById('form-nasabah');
+      form.reset();
+      document.getElementById('nasabah-id').value = id;
+
+      if (id) {
+        const n = state.nasabahList.find(x => x.id === id);
+        if (!n) return;
+        document.getElementById('modal-nasabah-title').textContent = 'Edit Data Nasabah (Guru Kelas)';
+        document.getElementById('nasabah-kelas').value = n.nama_kelas;
+        document.getElementById('nasabah-guru').value = n.nama_guru_kelas;
+        document.getElementById('nasabah-nip').value = n.nip_guru || '';
+        document.getElementById('nasabah-username').value = n.email_username;
+        document.getElementById('nasabah-password').value = n.password_pin;
+        document.getElementById('nasabah-active').checked = n.is_active;
+      } else {
+        document.getElementById('modal-nasabah-title').textContent = 'Tambah Nasabah Baru';
+        document.getElementById('nasabah-active').checked = true;
+      }
+      openModal('modal-nasabah');
+    };
+
+    document.getElementById('form-nasabah').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('nasabah-id').value;
+      const payload = {
+        nama_kelas: document.getElementById('nasabah-kelas').value.trim(),
+        nama_guru_kelas: document.getElementById('nasabah-guru').value.trim(),
+        nip_guru: document.getElementById('nasabah-nip').value.trim() || null,
+        email_username: document.getElementById('nasabah-username').value.trim(),
+        password_pin: document.getElementById('nasabah-password').value.trim(),
+        is_active: document.getElementById('nasabah-active').checked,
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = id
+        ? await supabase.from('nasabah_kelas').update(payload).eq('id', id)
+        : await supabase.from('nasabah_kelas').insert([payload]);
+
+      if (error) {
+        showToast('Gagal menyimpan data nasabah: ' + error.message, 'error');
+        return;
+      }
+      showToast(id ? 'Data nasabah berhasil diperbarui!' : 'Nasabah kelas baru berhasil ditambahkan!', 'success');
+      closeModal('modal-nasabah');
+      await refreshAllData();
+    });
+
+    // Unduh Template Excel Kosong dengan Header Baku
+    window.downloadNasabahTemplate = function() {
+      const headers = [['Nama_Kelas', 'Nama_Guru_Kelas', 'NIP', 'Username', 'Password']];
+      const ws = XLSX.utils.aoa_to_sheet(headers);
+      ws['!cols'] = [{ wch: 15 }, { wch: 30 }, { wch: 22 }, { wch: 20 }, { wch: 18 }];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Template_Nasabah');
+      XLSX.writeFile(wb, 'Template_Impor_Nasabah_Kreasi85.xlsx');
+      showToast('Template Excel berhasil diunduh.', 'success');
+    };
+
+    // Ekspor Data Nasabah Aktif/Semua ke Excel
+    window.exportNasabahExcel = function() {
+      if (state.nasabahList.length === 0) {
+        showToast('Belum ada data nasabah untuk diekspor.', 'info');
+        return;
+      }
+      const rows = state.nasabahList.map(n => ({
+        Nama_Kelas: n.nama_kelas,
+        Nama_Guru_Kelas: n.nama_guru_kelas,
+        NIP: n.nip_guru || '',
+        Username: n.email_username,
+        Password: n.password_pin,
+        Status: n.is_active ? 'Aktif' : 'Nonaktif'
+      }));
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Data_Nasabah_Kreasi85');
+      XLSX.writeFile(wb, `Data_Nasabah_Kreasi85_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      showToast('Data nasabah berhasil diekspor ke Excel!', 'success');
+    };
+
+    // Impor Massal Excel / CSV dengan Pratinjau & Validasi
+    window.handleImportFileSelect = function(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const rawRows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+          const seenKelasInFile = new Set();
+          state.importBuffer = [];
+
+          const previewRowsHtml = rawRows.map((row) => {
+            const kelas = String(row.Nama_Kelas || row.nama_kelas || '').trim();
+            const guru = String(row.Nama_Guru_Kelas || row.nama_guru_kelas || '').trim();
+            const nip = String(row.NIP || row.nip || '').trim();
+            const username = String(row.Username || row.username || '').trim();
+            const password = String(row.Password || row.password || '').trim();
+
+            let valid = true;
+            let note = 'Siap diimpor';
+
+            if (!kelas || !guru || !username || !password) {
+              valid = false;
+              note = 'Kolom wajib (Kelas/Guru/Username/Password) kosong';
+            } else if (seenKelasInFile.has(kelas.toLowerCase())) {
+              valid = false;
+              note = 'Nama kelas ganda di dalam file';
+            } else {
+              seenKelasInFile.add(kelas.toLowerCase());
+              const existsInDb = state.nasabahList.some(n => n.nama_kelas.toLowerCase() === kelas.toLowerCase());
+              if (existsInDb) note = 'Update data guru kelas yang sudah ada';
+              state.importBuffer.push({
+                nama_kelas: kelas,
+                nama_guru_kelas: guru,
+                nip_guru: nip || null,
+                email_username: username,
+                password_pin: password,
+                is_active: true,
+                updated_at: new Date().toISOString()
+              });
+            }
+
+            return `
+              <tr class="${valid ? 'bg-white' : 'bg-red-50/70'}">
+                <td class="p-2.5 font-bold ${valid ? 'text-emerald-700' : 'text-red-600'}">${valid ? 'Valid' : 'Error'}</td>
+                <td class="p-2.5 font-semibold">${kelas || '-'}</td>
+                <td class="p-2.5">${guru || '-'}</td>
+                <td class="p-2.5 font-mono">${username || '-'}</td>
+                <td class="p-2.5 text-slate-600">${note}</td>
+              </tr>
+            `;
+          }).join('');
+
+          document.getElementById('import-preview-tbody').innerHTML = previewRowsHtml;
+          document.getElementById('import-valid-count').textContent = state.importBuffer.length;
+          document.getElementById('import-preview-wrapper').classList.remove('hidden');
+          document.getElementById('btn-confirm-import').disabled = state.importBuffer.length === 0;
+        } catch (err) {
+          showToast('Gagal membaca file Excel/CSV: ' + err.message, 'error');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    };
+
+    window.executeImportNasabah = async function() {
+      if (state.importBuffer.length === 0) return;
+      const btn = document.getElementById('btn-confirm-import');
+      btn.disabled = true;
+
+      try {
+        const { error } = await supabase
+          .from('nasabah_kelas')
+          .upsert(state.importBuffer, { onConflict: 'nama_kelas' });
+
+        if (error) throw error;
+
+        showToast(`${state.importBuffer.length} data nasabah kelas berhasil diimpor!`, 'success');
+        state.importBuffer = [];
+        document.getElementById('import-excel-file').value = '';
+        document.getElementById('import-preview-wrapper').classList.add('hidden');
+        closeModal('modal-import-nasabah');
+        await refreshAllData();
+      } catch (err) {
+        showToast('Gagal mengimpor data ke database: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    // =========================================================================
+    // 15. INISIALISASI SAAT HALAMAN DIMUAT + SERVICE WORKER PWA
+    // =========================================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('year-now').textContent = new Date().getFullYear();
+      renderAllLogos();
+      initSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      document.getElementById('logo-upload-input')?.addEventListener('change', handleLogoUpload);
+      document.getElementById('logo-upload-sidebar')?.addEventListener('change', handleLogoUpload);
+
+      document.getElementById('toggle-password-btn')?.addEventListener('click', () => {
+        const inp = document.getElementById('login-password');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+      });
+
+      // Pulihkan sesi login jika tab belum ditutup
+      const savedSession = sessionStorage.getItem('k85_session');
+      if (savedSession && isDbConfigured) {
+        try {
+          loginSuccess(JSON.parse(savedSession));
+        } catch (e) {
+          sessionStorage.removeItem('k85_session');
+        }
+      }
+
+      lucide.createIcons();
+
+      // Registrasi Service Worker PWA via Blob
+      if ('serviceWorker' in navigator) {
+        const swCode = `
+          self.addEventListener('install', e => self.skipWaiting());
+          self.addEventListener('activate', e => self.clients.claim());
+          self.addEventListener('fetch', e => {});
+        `;
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+      }
+    });
+  </script>
+</body>
+</html>
