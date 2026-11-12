@@ -134,6 +134,7 @@
 
           <h1 class="font-display text-2xl font-extrabold tracking-tight text-slate-900">KREASI 85</h1>
           <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wider mt-0.5">Kelola dan Rekayasa Sampah Inovatif</p>
+          <p id="login-school-subtitle" class="text-[11px] font-bold text-slate-600 mt-0.5"></p>
           <p class="text-xs text-slate-500 italic mt-1">"Sampah Diolah, Kreativitas Bertambah."</p>
         </div>
 
@@ -209,7 +210,7 @@
         </div>
         <div class="min-w-0">
           <h2 class="font-display font-extrabold text-base text-slate-900 tracking-tight truncate">KREASI 85</h2>
-          <p class="text-[11px] text-emerald-700 font-medium leading-tight line-clamp-2">Kelola & Rekayasa Sampah Inovatif</p>
+          <p id="sidebar-school-name" class="text-[11px] text-emerald-700 font-medium leading-tight line-clamp-2">Kelola & Rekayasa Sampah Inovatif</p>
         </div>
       </div>
 
@@ -387,7 +388,7 @@
             </div>
           </div>
 
-          <!-- Visualisasi Proporsi Komposisi Sampah (Tanpa Papan Peringkat) -->
+          <!-- Visualisasi Proporsi Komposisi Sampah -->
           <div class="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 shadow-xs">
             <div class="flex items-center justify-between mb-4">
               <div>
@@ -405,7 +406,7 @@
             <div id="composition-bars-list" class="space-y-3"></div>
           </div>
 
-          <!-- Rekapitulasi Per Kelas (Tanpa Papan Peringkat / Urut Abjad Kelas) -->
+          <!-- Rekapitulasi Per Kelas -->
           <div id="dash-rekap-kelas-card" class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
             <div class="p-5 border-b border-slate-100 flex items-center justify-between">
               <div>
@@ -675,6 +676,80 @@
               <p class="text-sm font-semibold text-slate-700">Belum ada data nasabah (kelas)</p>
               <p class="text-xs text-slate-500 mt-1">Tambahkan kelas secara manual atau gunakan fitur Impor Massal Excel.</p>
             </div>
+          </div>
+        </section>
+
+        <!-- ==================== VIEW F: DATA SEKOLAH & KOP LAPORAN (ADMIN) ==================== -->
+        <section id="view-sekolah" class="hidden max-w-3xl mx-auto space-y-5">
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="p-5 sm:p-6 border-b border-slate-100 bg-emerald-50/40 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <i data-lucide="school" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h2 class="font-display text-lg font-bold text-slate-900">Identitas Sekolah & Penandatangan Laporan</h2>
+                <p class="text-xs text-slate-500">Data yang diisi di sini otomatis tampil pada Kop Laporan Resmi, Struk Penyetoran, dan tersinkron di semua HP pengurus.</p>
+              </div>
+            </div>
+
+            <form id="form-data-sekolah" class="p-5 sm:p-6 space-y-5">
+              <!-- Identitas Instansi Sekolah -->
+              <div class="space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 border-b border-slate-100 pb-1.5">1. Identitas Satuan Pendidikan</h3>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nama Sekolah *</label>
+                  <input type="text" id="sek-nama-sekolah" required placeholder="Contoh: UPT SPF SD INPRES 105285 TANDAM HILIR I"
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Alamat Lengkap Sekolah</label>
+                  <textarea id="sek-alamat-sekolah" rows="2" placeholder="Contoh: Jl. Besar Tandam Hilir I, Kec. Hamparan Perak, Kab. Deli Serdang"
+                    class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+                </div>
+              </div>
+
+              <!-- Pejabat Penandatangan Laporan -->
+              <div class="space-y-4 pt-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 border-b border-slate-100 pb-1.5">2. Pejabat Penandatangan Laporan Resmi</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
+                    <p class="text-xs font-bold text-slate-800">Pembina Kreasi 85 / Kepala Sekolah</p>
+                    <div>
+                      <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Kepala Sekolah & Gelar</label>
+                      <input type="text" id="sek-nama-kepsek" placeholder="Nama Kepala Sekolah..."
+                        class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
+                    <div>
+                      <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP Kepala Sekolah</label>
+                      <input type="text" id="sek-nip-kepsek" placeholder="NIP (Opsional)..."
+                        class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
+                  </div>
+
+                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
+                    <p class="text-xs font-bold text-slate-800">Kepala / Ketua Kreasi 85</p>
+                    <div>
+                      <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Kepala Kreasi 85 & Gelar</label>
+                      <input type="text" id="sek-nama-ketua" placeholder="Nama Ketua Bank Sampah..."
+                        class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
+                    <div>
+                      <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP Kepala Kreasi 85</label>
+                      <input type="text" id="sek-nip-ketua" placeholder="NIP (Opsional)..."
+                        class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 flex flex-col sm:flex-row items-center justify-end gap-3">
+                <button type="submit" id="btn-save-sekolah"
+                  class="w-full sm:w-auto py-3 px-6 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm flex items-center justify-center gap-2 transition cursor-pointer">
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                  <span>Simpan Pengaturan Sekolah</span>
+                </button>
+              </div>
+            </form>
           </div>
         </section>
 
@@ -1056,7 +1131,7 @@
     }
 
     // =========================================================================
-    // 2. SKRIP SQL SUPABASE (TABEL, TRIGGER KONVERSI OTOMATIS & RLS)
+    // 2. SKRIP SQL SUPABASE (TABEL, PENGATURAN SEKOLAH, TRIGGER & RLS)
     // =========================================================================
     const SQL_SETUP_SCRIPT = `-- JALANKAN SKRIP INI DI SQL EDITOR SUPABASE UNTUK KREASI 85
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -1112,7 +1187,21 @@ CREATE TABLE IF NOT EXISTS transaksi_detail (
   keterangan TEXT
 );
 
--- 5. Trigger Otomatis Konversi Gram -> Kg & Hitung Ulang Total Nota
+-- 5. Tabel Pengaturan Identitas Sekolah & Penandatangan
+CREATE TABLE IF NOT EXISTS pengaturan_sekolah (
+  id INTEGER PRIMARY KEY DEFAULT 1,
+  nama_sekolah TEXT DEFAULT '',
+  alamat_sekolah TEXT DEFAULT '',
+  nama_kepsek TEXT DEFAULT '',
+  nip_kepsek TEXT DEFAULT '',
+  nama_ketua TEXT DEFAULT '',
+  nip_ketua TEXT DEFAULT '',
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+INSERT INTO pengaturan_sekolah (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
+-- 6. Trigger Otomatis Konversi Gram -> Kg & Hitung Ulang Total Nota
 CREATE OR REPLACE FUNCTION fn_sync_berat_kreasi85()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -1165,11 +1254,12 @@ CREATE TRIGGER trg_after_detail_delete
 AFTER DELETE ON transaksi_detail
 FOR EACH ROW EXECUTE FUNCTION fn_sync_berat_kreasi85();
 
--- 6. Kebijakan Row-Level Security (RLS)
+-- 7. Kebijakan Row-Level Security (RLS)
 ALTER TABLE pengurus ENABLE ROW LEVEL SECURITY;
 ALTER TABLE nasabah_kelas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE transaksi_nota ENABLE ROW LEVEL SECURITY;
 ALTER TABLE transaksi_detail ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pengaturan_sekolah ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Akses API Pengurus" ON pengurus;
 CREATE POLICY "Akses API Pengurus" ON pengurus FOR ALL USING (true) WITH CHECK (true);
@@ -1181,17 +1271,28 @@ DROP POLICY IF EXISTS "Akses API Nota" ON transaksi_nota;
 CREATE POLICY "Akses API Nota" ON transaksi_nota FOR ALL USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Akses API Detail" ON transaksi_detail;
-CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH CHECK (true);`;
+CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Akses API Sekolah" ON pengaturan_sekolah;
+CREATE POLICY "Akses API Sekolah" ON pengaturan_sekolah FOR ALL USING (true) WITH CHECK (true);`;
 
     // =========================================================================
-    // 3. STATE APLIKASI (100% KOSONG TANPA DATA DUMMY)
+    // 3. STATE APLIKASI
     // =========================================================================
     const state = {
-      currentUser: null, // { id, nama, nip, role, username, kelas_id? }
+      currentUser: null,
       activeView: 'dashboard',
       pengurusList: [],
       nasabahList: [],
-      transaksiList: [], // Berisi nota beserta array .details
+      transaksiList: [],
+      sekolahInfo: {
+        nama_sekolah: '',
+        alamat_sekolah: '',
+        nama_kepsek: '',
+        nip_kepsek: '',
+        nama_ketua: '',
+        nip_ketua: ''
+      },
       selectedStrukNota: null,
       importBuffer: []
     };
@@ -1212,7 +1313,7 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
     };
 
     // =========================================================================
-    // 4. LOGO RESMI KREASI 85 (./logo.jpg DENGAN FALLBACK ./Kreasi85_2.jpg)
+    // 4. LOGO RESMI KREASI 85
     // =========================================================================
     function getActiveLogoSrc() {
       return localStorage.getItem('k85_custom_logo') || './logo.jpg';
@@ -1402,7 +1503,7 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       btn.disabled = true;
 
       try {
-        // 1. Cek ke tabel pengurus (Admin, Teller, Kepala Kreasi 85, Pembina/Kepsek)
+        // 1. Cek ke tabel pengurus
         const { data: pengurusData, error: errP } = await supabase
           .from('pengurus')
           .select('*')
@@ -1427,7 +1528,7 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
           return;
         }
 
-        // 2. Cek ke tabel nasabah_kelas (Guru Kelas)
+        // 2. Cek ke tabel nasabah_kelas
         const { data: nasabahData, error: errN } = await supabase
           .from('nasabah_kelas')
           .select('*')
@@ -1479,7 +1580,6 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       setupRoleNavigation();
       await refreshAllData();
 
-      // Arahkan Teller langsung ke form transaksi baru atau dasbor
       const defaultMenu = userObj.role === 'teller' ? 'transaksi-baru' : 'dashboard';
       switchView(defaultMenu);
     }
@@ -1494,7 +1594,7 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
     };
 
     // =========================================================================
-    // 7. NAVIGASI ADAPTIF 5 ROLE (DESKTOP SIDEBAR & MOBILE BOTTOM BAR)
+    // 7. NAVIGASI ADAPTIF 5 ROLE (TERMASUK MENU DATA SEKOLAH)
     // =========================================================================
     function getMenusForRole(role) {
       const allMenus = [
@@ -1502,7 +1602,8 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
         { id: 'transaksi-baru', label: 'Transaksi Baru', icon: 'plus-circle', roles: ['admin', 'teller'] },
         { id: 'riwayat', label: 'Riwayat Setoran', icon: 'history', roles: ['admin', 'teller', 'kepala_kreasi', 'pembina', 'guru_kelas'] },
         { id: 'pengurus', label: 'Data Pengurus', icon: 'shield-check', roles: ['admin'] },
-        { id: 'nasabah', label: 'Data Nasabah', icon: 'users', roles: ['admin', 'kepala_kreasi'] }
+        { id: 'nasabah', label: 'Data Nasabah', icon: 'users', roles: ['admin', 'kepala_kreasi'] },
+        { id: 'sekolah', label: 'Data Sekolah', icon: 'school', roles: ['admin'] }
       ];
       return allMenus.filter(m => m.roles.includes(role));
     }
@@ -1524,7 +1625,7 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
         <button type="button" data-nav-id="${m.id}" onclick="switchView('${m.id}')"
           class="nav-btn-mobile flex-1 flex flex-col items-center justify-center gap-1 py-1 text-[10px] font-semibold text-slate-500 transition cursor-pointer">
           <i data-lucide="${m.icon}" class="w-5 h-5"></i>
-          <span class="truncate max-w-[72px]">${m.label}</span>
+          <span class="truncate max-w-[68px]">${m.label}</span>
         </button>
       `).join('');
 
@@ -1537,7 +1638,7 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       const activeMenu = menus.find(m => m.id === viewId) || menus[0];
       if (!activeMenu) return;
 
-      ['dashboard', 'transaksi-baru', 'riwayat', 'pengurus', 'nasabah'].forEach(id => {
+      ['dashboard', 'transaksi-baru', 'riwayat', 'pengurus', 'nasabah', 'sekolah'].forEach(id => {
         document.getElementById(`view-${id}`)?.classList.add('hidden');
       });
       document.getElementById(`view-${activeMenu.id}`)?.classList.remove('hidden');
@@ -1562,11 +1663,46 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       if (activeMenu.id === 'riwayat') renderRiwayatTable();
       if (activeMenu.id === 'pengurus') renderPengurusTable();
       if (activeMenu.id === 'nasabah') renderNasabahTable();
+      if (activeMenu.id === 'sekolah') populateSekolahForm();
     };
 
     // =========================================================================
-    // 8. SINKRONISASI DATA REAL-TIME DARI SUPABASE
+    // 8. SINKRONISASI DATA REAL-TIME DARI SUPABASE (TERMASUK DATA SEKOLAH)
     // =========================================================================
+    async function loadSekolahInfo() {
+      if (!isDbConfigured) return;
+      try {
+        const { data, error } = await supabase
+          .from('pengaturan_sekolah')
+          .select('*')
+          .eq('id', 1)
+          .maybeSingle();
+
+        if (!error && data) {
+          state.sekolahInfo = {
+            nama_sekolah: data.nama_sekolah || '',
+            alamat_sekolah: data.alamat_sekolah || '',
+            nama_kepsek: data.nama_kepsek || '',
+            nip_kepsek: data.nip_kepsek || '',
+            nama_ketua: data.nama_ketua || '',
+            nip_ketua: data.nip_ketua || ''
+          };
+          updateSchoolBrandingUI();
+        }
+      } catch (e) {
+        // Abaikan jika tabel pengaturan_sekolah belum dibuat
+      }
+    }
+
+    function updateSchoolBrandingUI() {
+      const namaSek = state.sekolahInfo?.nama_sekolah?.trim();
+      const loginSub = document.getElementById('login-school-subtitle');
+      const sideSub = document.getElementById('sidebar-school-name');
+
+      if (loginSub) loginSub.textContent = namaSek || '';
+      if (sideSub) sideSub.textContent = namaSek || 'Kelola & Rekayasa Sampah Inovatif';
+    }
+
     window.refreshAllData = async function() {
       if (!isDbConfigured || !state.currentUser) return;
       const btn = document.getElementById('btn-refresh-data');
@@ -1601,11 +1737,14 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
           details: detailsByNota.get(nota.id) || []
         }));
 
+        await loadSekolahInfo();
+
         populateKelasDropdowns();
         renderDashboard();
         renderRiwayatTable();
         renderPengurusTable();
         renderNasabahTable();
+        populateSekolahForm();
       } catch (err) {
         showToast('Gagal memuat data dari Supabase: ' + err.message, 'error');
       } finally {
@@ -1637,6 +1776,56 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       const riwFilter = document.getElementById('riwayat-filter-kelas');
       if (riwFilter) riwFilter.innerHTML = optionsSemua;
     }
+
+    // =========================================================================
+    // 8B. FORM DATA SEKOLAH & PENANDATANGAN LAPORAN
+    // =========================================================================
+    function populateSekolahForm() {
+      const s = state.sekolahInfo || {};
+      const elNama = document.getElementById('sek-nama-sekolah');
+      if (!elNama) return;
+      elNama.value = s.nama_sekolah || '';
+      document.getElementById('sek-alamat-sekolah').value = s.alamat_sekolah || '';
+      document.getElementById('sek-nama-kepsek').value = s.nama_kepsek || '';
+      document.getElementById('sek-nip-kepsek').value = s.nip_kepsek || '';
+      document.getElementById('sek-nama-ketua').value = s.nama_ketua || '';
+      document.getElementById('sek-nip-ketua').value = s.nip_ketua || '';
+    }
+
+    document.getElementById('form-data-sekolah').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!isDbConfigured) return;
+
+      const btn = document.getElementById('btn-save-sekolah');
+      btn.disabled = true;
+
+      const payload = {
+        id: 1,
+        nama_sekolah: document.getElementById('sek-nama-sekolah').value.trim(),
+        alamat_sekolah: document.getElementById('sek-alamat-sekolah').value.trim(),
+        nama_kepsek: document.getElementById('sek-nama-kepsek').value.trim(),
+        nip_kepsek: document.getElementById('sek-nip-kepsek').value.trim(),
+        nama_ketua: document.getElementById('sek-nama-ketua').value.trim(),
+        nip_ketua: document.getElementById('sek-nip-ketua').value.trim(),
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        const { error } = await supabase
+          .from('pengaturan_sekolah')
+          .upsert([payload], { onConflict: 'id' });
+
+        if (error) throw error;
+
+        state.sekolahInfo = payload;
+        updateSchoolBrandingUI();
+        showToast('Identitas sekolah & penandatangan laporan berhasil disimpan!', 'success');
+      } catch (err) {
+        showToast('Gagal menyimpan data sekolah (pastikan SQL tabel pengaturan_sekolah sudah dijalankan): ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    });
 
     // =========================================================================
     // 9. FORM INPUT TRANSAKSI MULTI-ITEM (GRAM -> KG OTOMATIS)
@@ -1931,7 +2120,7 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
         }).join('');
       }
 
-      // Render Rekap Per Kelas (khusus role sekolah: Admin, Teller, Kepala Kreasi 85, Pembina)
+      // Render Rekap Per Kelas
       const rekapCard = document.getElementById('dash-rekap-kelas-card');
       const rekapTbody = document.getElementById('dash-rekap-kelas-tbody');
       if (rekapCard && rekapTbody) {
@@ -2055,7 +2244,7 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       lucide.createIcons({ nodes: [tbody] });
     };
 
-    // Edit Transaksi (Admin & Kepala Kreasi 85)
+    // Edit Transaksi
     window.openEditTransaksiModal = function(notaId) {
       const nota = state.transaksiList.find(n => n.id === notaId);
       if (!nota) return;
@@ -2185,7 +2374,6 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
     });
 
     window.deleteTransaksi = async function(notaId, nomorNota) {
-      // Konfirmasi menggunakan toast aksi cepat (tanpa window.confirm)
       const existingConfirm = document.getElementById('confirm-delete-bar');
       if (existingConfirm) existingConfirm.remove();
 
@@ -2216,12 +2404,15 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
     };
 
     // =========================================================================
-    // 12. STRUK NOTA & CETAK LAPORAN RESMI BERTANDA TANGAN
+    // 12. STRUK NOTA & CETAK LAPORAN RESMI (TERINTEGRASI DATA SEKOLAH)
     // =========================================================================
     window.openStrukModal = function(notaId) {
       const nota = state.transaksiList.find(n => n.id === notaId);
       if (!nota) return;
       state.selectedStrukNota = nota;
+
+      const namaSekolah = state.sekolahInfo?.nama_sekolah?.trim() || '';
+      const alamatSekolah = state.sekolahInfo?.alamat_sekolah?.trim() || '';
 
       const itemsHtml = (nota.details || []).map(d => `
         <div class="flex items-center justify-between py-1.5 border-b border-dashed border-slate-200">
@@ -2240,7 +2431,8 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
         <div class="text-center border-b border-slate-200 pb-2.5">
           <img src="${getActiveLogoSrc()}" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" style="width:56px; height:56px; object-fit:contain; margin:0 auto 6px auto;" />
           <p class="font-display font-extrabold text-sm text-emerald-800">BANK SAMPAH KREASI 85</p>
-          <p class="text-[10px] text-slate-500">Kelola dan Rekayasa Sampah Inovatif</p>
+          ${namaSekolah ? `<p class="font-bold text-[11px] text-slate-800 mt-0.5">${namaSekolah}</p>` : ''}
+          ${alamatSekolah ? `<p class="text-[10px] text-slate-500">${alamatSekolah}</p>` : '<p class="text-[10px] text-slate-500">Kelola dan Rekayasa Sampah Inovatif</p>'}
           <p class="font-mono font-bold text-xs text-slate-800 mt-1.5">${nota.nomor_nota}</p>
         </div>
         <div class="space-y-1 text-[11px]">
@@ -2263,8 +2455,10 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
     window.copyStrukWhatsApp = function() {
       const nota = state.selectedStrukNota;
       if (!nota) return;
+      const namaSekolah = state.sekolahInfo?.nama_sekolah?.trim();
       const lines = [
         `*BUKTI SETOR SAMPAH — KREASI 85*`,
+        ...(namaSekolah ? [`*${namaSekolah}*`] : []),
         `No. Nota: *${nota.nomor_nota}*`,
         `Tanggal: ${formatDateTimeID(nota.tanggal_setor)}`,
         `Kelas: *${nota.nasabah?.nama_kelas}* (${nota.nasabah?.nama_guru_kelas})`,
@@ -2299,8 +2493,20 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       }));
       const totalGram = Object.values(sumsGram).reduce((a, b) => a + b, 0);
 
-      const kepala = state.pengurusList.find(p => p.role === 'kepala_kreasi' && p.is_active) || { nama_lengkap: '........................................', nip: '........................' };
-      const pembina = state.pengurusList.find(p => p.role === 'pembina' && p.is_active) || { nama_lengkap: '........................................', nip: '........................' };
+      // Prioritaskan data dari Form Data Sekolah; jika kosong, ambil dari Data Pengurus
+      const sek = state.sekolahInfo || {};
+      const kepalaPengurus = state.pengurusList.find(p => p.role === 'kepala_kreasi' && p.is_active);
+      const pembinaPengurus = state.pengurusList.find(p => p.role === 'pembina' && p.is_active);
+
+      const namaSekolah = sek.nama_sekolah?.trim() || 'KREASI 85 — KELOLA DAN REKAYASA SAMPAH INOVATIF';
+      const alamatSekolah = sek.alamat_sekolah?.trim() || '';
+
+      const namaPembina = sek.nama_kepsek?.trim() || pembinaPengurus?.nama_lengkap || '........................................';
+      const nipPembina = sek.nip_kepsek?.trim() || pembinaPengurus?.nip || '........................';
+
+      const namaKetua = sek.nama_ketua?.trim() || kepalaPengurus?.nama_lengkap || '........................................';
+      const nipKetua = sek.nip_ketua?.trim() || kepalaPengurus?.nip || '........................';
+
       const todayStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
       const rowsHtml = filtered.map((n, idx) => `
@@ -2318,9 +2524,11 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
           <div style="display:flex; align-items:center; justify-content:center; gap:16px; border-bottom: 3px double #065f46; padding-bottom: 12px; margin-bottom: 18px;">
             <img src="${getActiveLogoSrc()}" onerror="this.onerror=null; this.src='./Kreasi85_2.jpg';" alt="Logo Kreasi 85" style="width:74px; height:74px; object-fit:contain;" />
             <div style="text-align:center;">
-              <h1 style="font-size: 18px; font-weight: 800; margin: 0; color: #065f46;">LAPORAN REKAPITULASI TRANSAKSI BANK SAMPAH SEKOLAH</h1>
-              <h2 style="font-size: 15px; font-weight: 700; margin: 4px 0 0 0;">KREASI 85 — KELOLA DAN REKAYASA SAMPAH INOVATIF</h2>
-              <p style="font-size: 11px; font-style: italic; margin: 4px 0 0 0; color: #475569;">"Sampah Diolah, Kreativitas Bertambah."</p>
+              <h1 style="font-size: 16px; font-weight: 800; margin: 0; color: #065f46;">LAPORAN REKAPITULASI TRANSAKSI BANK SAMPAH SEKOLAH</h1>
+              <h2 style="font-size: 15px; font-weight: 800; margin: 3px 0 0 0; color: #0f172a;">${namaSekolah}</h2>
+              ${sek.nama_sekolah?.trim() ? `<p style="font-size: 12px; font-weight: 700; margin: 2px 0 0 0; color: #047857;">KREASI 85 — KELOLA DAN REKAYASA SAMPAH INOVATIF</p>` : ''}
+              ${alamatSekolah ? `<p style="font-size: 11px; margin: 2px 0 0 0; color: #334155;">${alamatSekolah}</p>` : ''}
+              <p style="font-size: 10.5px; font-style: italic; margin: 3px 0 0 0; color: #475569;">"Sampah Diolah, Kreativitas Bertambah."</p>
             </div>
           </div>
 
@@ -2367,14 +2575,14 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
               <td style="width:50%; vertical-align:top;">
                 <p style="margin:0;">Mengetahui,</p>
                 <p style="margin:2px 0 56px 0; font-weight:700;">Pembina Kreasi 85 / Kepala Sekolah</p>
-                <p style="margin:0; font-weight:700; text-decoration:underline;">${pembina.nama_lengkap}</p>
-                <p style="margin:2px 0 0 0; font-size:11px;">NIP. ${pembina.nip || '-'}</p>
+                <p style="margin:0; font-weight:700; text-decoration:underline;">${namaPembina}</p>
+                <p style="margin:2px 0 0 0; font-size:11px;">NIP. ${nipPembina}</p>
               </td>
               <td style="width:50%; vertical-align:top;">
                 <p style="margin:0;">Dicetak pada ${todayStr}</p>
                 <p style="margin:2px 0 56px 0; font-weight:700;">Kepala Kreasi 85</p>
-                <p style="margin:0; font-weight:700; text-decoration:underline;">${kepala.nama_lengkap}</p>
-                <p style="margin:2px 0 0 0; font-size:11px;">NIP. ${kepala.nip || '-'}</p>
+                <p style="margin:0; font-weight:700; text-decoration:underline;">${namaKetua}</p>
+                <p style="margin:2px 0 0 0; font-size:11px;">NIP. ${nipKetua}</p>
               </td>
             </tr>
           </table>
@@ -2599,7 +2807,6 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       await refreshAllData();
     });
 
-    // Unduh Template Excel Kosong dengan Header Baku
     window.downloadNasabahTemplate = function() {
       const headers = [['Nama_Kelas', 'Nama_Guru_Kelas', 'NIP', 'Username', 'Password']];
       const ws = XLSX.utils.aoa_to_sheet(headers);
@@ -2610,7 +2817,6 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       showToast('Template Excel berhasil diunduh.', 'success');
     };
 
-    // Ekspor Data Nasabah Aktif/Semua ke Excel
     window.exportNasabahExcel = function() {
       if (state.nasabahList.length === 0) {
         showToast('Belum ada data nasabah untuk diekspor.', 'info');
@@ -2631,7 +2837,6 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
       showToast('Data nasabah berhasil diekspor ke Excel!', 'success');
     };
 
-    // Impor Massal Excel / CSV dengan Pratinjau & Validasi
     window.handleImportFileSelect = function(event) {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -2728,10 +2933,14 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
     // =========================================================================
     // 15. INISIALISASI SAAT HALAMAN DIMUAT + SERVICE WORKER PWA
     // =========================================================================
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('year-now').textContent = new Date().getFullYear();
       renderAllLogos();
       initSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      if (isDbConfigured) {
+        await loadSekolahInfo();
+      }
 
       document.getElementById('logo-upload-input')?.addEventListener('change', handleLogoUpload);
       document.getElementById('logo-upload-sidebar')?.addEventListener('change', handleLogoUpload);
@@ -2741,7 +2950,6 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
         inp.type = inp.type === 'password' ? 'text' : 'password';
       });
 
-      // Pulihkan sesi login jika tab belum ditutup
       const savedSession = sessionStorage.getItem('k85_session');
       if (savedSession && isDbConfigured) {
         try {
@@ -2753,7 +2961,6 @@ CREATE POLICY "Akses API Detail" ON transaksi_detail FOR ALL USING (true) WITH C
 
       lucide.createIcons();
 
-      // Registrasi Service Worker PWA via Blob
       if ('serviceWorker' in navigator) {
         const swCode = `
           self.addEventListener('install', e => self.skipWaiting());
